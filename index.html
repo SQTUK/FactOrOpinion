@@ -50,15 +50,21 @@
     .hud { display:flex; gap: 10px; align-items:center; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
     .pill { background: var(--panel); border:1px solid var(--border); padding:8px 12px; border-radius: 999px; font-size: .9rem; box-shadow: 0 4px 14px rgba(255,191,197,.2); }
 
+    /* Desktop: three columns (Opinion | Stage | Fact) */
     main {
       padding: 10px clamp(16px, 4vw, 40px) 30px;
-      display: grid; grid-template-columns: 1fr min(680px, 92vw) 1fr; gap: 18px; align-items: center;
+      display: grid;
+      grid-template-columns: 1fr min(680px, 92vw) 1fr; /* Opinion (left), Stage (middle), Fact (right) */
+      gap: 18px;
+      align-items: center;
     }
 
     .pile {
-      border: 2px dashed var(--border); border-radius: 18px; padding: 18px; min-height: 220px;
+      border: 2px dashed var(--border); border-radius: 18px; padding: 18px; min-height: 180px;
       display: grid; place-items: center; text-align: center; position: relative;
       background: linear-gradient(180deg, rgba(255,191,197,.10), rgba(255,191,197,0));
+      width: min(680px, 92%);
+      margin-inline: auto;
     }
     .pile h2 { margin: 0; font-size: clamp(16px, 2vw, 22px); letter-spacing:.6px; }
     .pile small { color: var(--muted); }
@@ -75,7 +81,7 @@
       width: min(560px, 90vw); min-height: 180px; max-width: 560px;
       background: var(--card);
       border: 1px solid var(--border); border-radius: 24px; padding: 26px clamp(18px, 3vw, 28px);
-      box-shadow: var(--shadow); position: absolute; will-change: transform;
+      box-shadow: var(--shadow); position: relative; will-change: transform;
       touch-action: none; user-select: none; cursor: grab;
       display: grid; align-content: center; text-align: center; gap: 14px;
     }
@@ -117,17 +123,36 @@
     .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
     :focus-visible { outline: 2px dashed var(--accent); outline-offset: 2px; }
 
+    /* Responsive tweaks */
+    @media (max-width: 1024px) {
+      .stage { height: min(68vh, 500px); }
+      .pile { min-height: 160px; }
+    }
     @media (max-width: 860px) {
-      main { grid-template-columns: 1fr; }
+      main { grid-template-columns: 1fr min(92vw, 520px) 1fr; gap: 14px; }
+      .stage { height: min(62vh, 460px); }
       .pile { min-height: 140px; }
-      .stage { order: -1; height: min(60vh, 440px); }
+    }
+    @media (max-width: 640px) {
+      header { padding: 24px 14px 12px; row-gap: 10px; }
+      .brand img { height: 56px; }
+      .title { font-size: clamp(18px, 5.2vw, 28px); }
+      .subtitle { font-size: .95rem; }
+      .hud { gap: 8px; }
+      .pill { padding: 6px 10px; font-size: .85rem; }
+      main { padding: 8px 14px 20px; }
+      .card { width: min(92vw, 520px); min-height: 160px; padding: 20px 16px; border-radius: 20px; }
+      .prompt { font-size: clamp(16px, 5vw, 22px); }
+      footer { padding: 10px 14px calc(16px + env(safe-area-inset-bottom)); flex-direction: column; gap: 10px; }
+      .controls { flex-wrap: wrap; }
+      button { width: auto; min-height: 40px; }
     }
   </style>
 </head>
 <body>
   <header>
     <div class="brand">
-      <img src="assets/logo.png" alt="logo" />
+      <img src="assets/logo.png" alt="Three Insurance logo" />
     </div>
     <div class="title">Three Insurance: Fact or Opinion</div>
     <div class="subtitle">Drag the card toward <strong>Opinion</strong> (left) or <strong>Fact</strong> (right), or use your arrow keys.</div>
@@ -202,8 +227,9 @@
   </div>
 
   <script>
-    // --- Seed data (Three Insurance themed) ---
+    // --- Three Insurance dataset (50 items) ---
     // Each item: { text, kind: 'opinion'|'fact', difficulty: 'easy'|'medium'|'hard' }
+
     const OPINIONS = [
       // Easy
       { text: "This is the best insurance Three offers.", kind: 'opinion', difficulty: 'easy' },
@@ -280,7 +306,7 @@
       ["I always take insurance myself.", "Personal preference isn’t evidence of suitability for the customer."],
       ["This plan is unbeatable for what you get.", "‘Unbeatable’ is a marketing superlative, not verifiable."],
       ["You’ll thank me when something happens.", "Predicts future outcomes/feelings; not factual."],
-      ["You can’t go wrong with this one.", "Overconfident assurance; avoids discussing trade‑offs."],
+      ["You can’t go wrong with this one.", "Overconfident assurance; avoids discussing trade-offs."],
       ["I personally think this is worth every penny.", "‘I think’ + ‘worth’ signals a value judgement."],
       ["I always tell my customers to take this.", "Suggests blanket advice rather than needs-based guidance."],
       ["It’s easily the most comprehensive cover available.", "Another subjective superlative without defined scope/metrics."],
@@ -320,16 +346,18 @@
       ["You’ll need proof of purchase if you make a claim.", "Requirement detail; factual."],
       ["The cover continues even if you change SIMs.", "Clarifies cover is tied to device, not SIM; factual if in terms."],
       ["You can call the dedicated claims team for support.", "Support channel; factual."],
-      ["I can explain what’s covered, and you can decide if it’s right for you.", "Neutral, customer‑led phrasing; factual and compliant."]
+      ["I can explain what’s covered, and you can decide if it’s right for you.", "Neutral, customer-led phrasing; factual and compliant."]
     ]);
 
-    // Helpers
+    // --- Helpers ---
     const $ = (sel) => document.querySelector(sel);
     const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
     const shuffle = (arr) => arr.map(v => [Math.random(), v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]);
     const sampleN = (arr, n) => shuffle(arr).slice(0, n);
+    const getSwipeThreshold = () =>
+      Math.max(60, Math.min(160, Math.floor(window.innerWidth * 0.22)));
 
-    // Elements (unchanged)
+    // --- Elements ---
     const cardEl = $('#card');
     const promptEl = $('#prompt');
     const endEl = $('#end');
@@ -363,7 +391,7 @@
     const wrongQuote = $('#wrong-quote');
     const wrongBody = $('#wrong-body');
 
-    // State
+    // --- State ---
     let deck = [];
     let index = 0;
     let score = 0;       // correct count
@@ -438,6 +466,7 @@
         score++; streak++;
         setStamp('good', true); a11yMsg.textContent = 'Correct';
         updateHud();
+        // Slightly longer pause so the player can acknowledge correctness
         setTimeout(() => { index++; setStamp('good', false); loadCard(); }, 900);
       } else {
         wrong++; streak = 0; setStamp('bad', true); a11yMsg.textContent = 'Incorrect';
@@ -474,7 +503,7 @@
       }
     });
 
-    // Drag / swipe (unchanged)
+    // Drag / swipe (horizontal)
     let startX = 0, startY = 0, curX = 0, curY = 0, dragging = false;
 
     function onPointerDown(e) {
@@ -491,9 +520,9 @@
       const rot = clamp(curX / 18, -14, 14);
       cardEl.style.transform = `translate(${curX}px, ${curY}px) rotate(${rot}deg)`;
 
-      const threshold = 100;
+      const threshold = getSwipeThreshold();
       pileOpinion.classList.toggle('active', curX < -threshold);
-      pileFact.classList.toggle('active', curX > threshold);
+      pileFact.classList.toggle('active',  curX >  threshold);
     }
 
     function onPointerUp() {
@@ -502,10 +531,13 @@
       pileOpinion.classList.remove('active');
       pileFact.classList.remove('active');
 
-      const threshold = 120;
-      if (curX > threshold) { animateOut('right'); handleChoice('fact'); }
-      else if (curX < -threshold) { animateOut('left'); handleChoice('opinion'); }
-      else {
+      const threshold = getSwipeThreshold();
+      if (curX > threshold) {
+        animateOut('right'); handleChoice('fact');
+      } else if (curX < -threshold) {
+        animateOut('left'); handleChoice('opinion');
+      } else {
+        // snap back
         cardEl.style.transition = 'transform .2s ease';
         cardEl.style.transform = 'translate(0px, 0px) rotate(0deg)';
         setTimeout(() => { cardEl.style.transition = ''; }, 200);
@@ -533,7 +565,7 @@
     // Keyboard shortcuts
     window.addEventListener('keydown', (e) => {
       if (endEl.classList.contains('visible') || wrongModal.classList.contains('visible')) return;
-      if (e.key === 'ArrowLeft') { e.preventDefault(); animateOut('left'); handleChoice('opinion'); }
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); animateOut('left');  handleChoice('opinion'); }
       if (e.key === 'ArrowRight') { e.preventDefault(); animateOut('right'); handleChoice('fact'); }
       if (e.key === 'r' || e.key === 'R') { resetGame(true); }
     });
@@ -561,7 +593,7 @@
     function init() { deck = makeDeck(); loadCard(); }
     init();
 
-    // Basic smoke tests (augmented)
+    // Basic smoke tests
     (function runBasicTests() {
       const results = [];
       function assert(name, cond) { results.push({ name, pass: !!cond }); }
