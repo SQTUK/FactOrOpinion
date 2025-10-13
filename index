@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Three Insurance: Fact or Opinion</title>
+  <style>
+    :root {
+      /* Brand theme */
+      --pink: #ffbfc5;        /* accent */
+      --pink-soft: #ffdced;   /* page background */
+      --white: #ffffff;       /* card/surface */
+
+      --bg: var(--pink-soft);
+      --panel: var(--white);
+      --muted: #6b7280;       /* slate-500 */
+      --text: #111827;        /* slate-900 */
+      --accent: var(--pink);
+      --good: #22c55e;        /* green-500 */
+      --bad: #ef4444;         /* red-500 */
+      --card: var(--white);
+      --shadow: 0 20px 60px rgba(17, 24, 39, .15);
+      --border: rgba(255, 191, 197, 0.7);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 700px at 50% -10%, var(--pink) 0%, var(--bg) 50%, #fff0 60%), var(--bg);
+      color: var(--text);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    /* Centered brand header */
+    header {
+      background: var(--bg);
+      padding: 32px 20px 16px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      row-gap: 12px;
+    }
+    .brand img { height: 90px; width: auto; display: block; }
+    .title { font-weight: 800; font-size: clamp(22px, 3.2vw, 38px); letter-spacing: .4px; margin: 0; }
+    .subtitle { color: var(--muted); font-size: 1rem; }
+
+    .hud { display:flex; gap: 10px; align-items:center; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
+    .pill { background: var(--panel); border:1px solid var(--border); padding:8px 12px; border-radius: 999px; font-size: .9rem; box-shadow: 0 4px 14px rgba(255,191,197,.2); }
+
+    main {
+      padding: 10px clamp(16px, 4vw, 40px) 30px;
+      display: grid; grid-template-columns: 1fr min(680px, 92vw) 1fr; gap: 18px; align-items: center;
+    }
+
+    .pile {
+      border: 2px dashed var(--border); border-radius: 18px; padding: 18px; min-height: 220px;
+      display: grid; place-items: center; text-align: center; position: relative;
+      background: linear-gradient(180deg, rgba(255,191,197,.10), rgba(255,191,197,0));
+    }
+    .pile h2 { margin: 0; font-size: clamp(16px, 2vw, 22px); letter-spacing:.6px; }
+    .pile small { color: var(--muted); }
+
+    .pile.opinion { box-shadow: inset 0 0 0 1px rgba(239,68,68,.12); }
+    .pile.fact { box-shadow: inset 0 0 0 1px rgba(34,197,94,.12); }
+
+    .pile.active.opinion { border-color: rgba(239,68,68,.5); background: rgba(239,68,68,.06); }
+    .pile.active.fact { border-color: rgba(34,197,94,.5); background: rgba(34,197,94,.06); }
+
+    .stage { position: relative; height: min(72vh, 520px); display:grid; place-items:center; }
+
+    .card {
+      width: min(560px, 90vw); min-height: 180px; max-width: 560px;
+      background: var(--card);
+      border: 1px solid var(--border); border-radius: 24px; padding: 26px clamp(18px, 3vw, 28px);
+      box-shadow: var(--shadow); position: absolute; will-change: transform;
+      touch-action: none; user-select: none; cursor: grab;
+      display: grid; align-content: center; text-align: center; gap: 14px;
+    }
+    .card.grabbing { cursor: grabbing; }
+    .prompt { font-size: clamp(18px, 2.2vw, 26px); line-height: 1.2; }
+    .hint { color: var(--muted); font-size: .9rem; }
+
+    .sticker { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+    .stamp { font-weight: 800; letter-spacing: 2px; text-transform:uppercase; font-size: 18px; padding: 6px 12px; border-radius: 10px; border:2px solid currentColor; opacity:0; transform: scale(.8) rotate(-6deg); transition: opacity .15s ease, transform .15s ease; }
+    .stamp.good { color: var(--good); background: rgba(34,197,94,.08); }
+    .stamp.bad { color: var(--bad); background: rgba(239,68,68,.08); transform: scale(.8) rotate(6deg); }
+
+    .controls { display:flex; gap: 10px; justify-content:center; margin-top: 12px; }
+    button {
+      background: var(--panel); color: var(--text); border: 1px solid var(--border); padding: 10px 14px; border-radius: 12px;
+      font: inherit; cursor: pointer; transition: transform .06s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+      box-shadow: 0 8px 18px rgba(255,191,197,.25);
+    }
+    button:hover { background: #fff; }
+    button:active { transform: translateY(1px); }
+    .primary { border-color: var(--accent); background: var(--panel); }
+
+    footer { padding: 8px clamp(16px, 4vw, 40px) 26px; color: var(--muted); font-size: .9rem; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap: wrap; }
+
+    .end { display: none; text-align: center; gap: 14px; padding: 20px; border-radius: 18px; background: var(--panel); border:1px solid var(--border); box-shadow: var(--shadow); }
+    .end.visible { display: grid; }
+
+    /* Modal */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(17,24,39,.45); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 40; }
+    .modal-backdrop.visible { display: flex; }
+    .modal { background: var(--panel); color: var(--text); border: 1px solid var(--border); border-radius: 18px; max-width: 640px; width: min(640px, 92vw); box-shadow: 0 30px 80px rgba(17,24,39,.35); padding: 18px 18px 14px; }
+    .modal h3 { margin: 0 0 8px 0; font-size: 1.15rem; }
+    .modal p { margin: 8px 0; color: var(--text); }
+    .modal .reason { background: linear-gradient(180deg, rgba(255,191,197,.18), rgba(255,191,197,.06)); border: 1px dashed var(--border); border-radius: 12px; padding: 12px; }
+    .modal .row { display:flex; gap: 10px; align-items:center; flex-wrap: wrap; }
+    .badge { padding: 4px 8px; border-radius: 999px; border:1px solid var(--border); background: var(--panel); font-size: .8rem; }
+
+    /* Accessibility */
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
+    :focus-visible { outline: 2px dashed var(--accent); outline-offset: 2px; }
+
+    @media (max-width: 860px) {
+      main { grid-template-columns: 1fr; }
+      .pile { min-height: 140px; }
+      .stage { order: -1; height: min(60vh, 440px); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img src="Three Ins Enabled Logo.png" alt="Three Insurance logo" />
+    </div>
+    <div class="title">Three Insurance: Fact or Opinion</div>
+    <div class="subtitle">Drag the card toward <strong>Opinion</strong> (left) or <strong>Fact</strong> (right), or use your arrow keys.</div>
+    <div class="hud" aria-live="polite" aria-atomic="true">
+      <div class="pill" id="score">Correct: 0</div>
+      <div class="pill" id="wrong">Wrong: 0</div>
+      <div class="pill" id="remaining">Left: 0</div>
+      <div class="pill" id="streak">Streak: 0</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="pile opinion" id="pile-opinion" aria-label="Opinion pile" tabindex="0">
+      <div>
+        <h2>Opinion</h2>
+        <small>Swipe / drop left</small>
+      </div>
+    </section>
+
+    <section class="stage">
+      <div id="card" class="card" role="group" aria-roledescription="draggable card" aria-live="polite">
+        <div class="prompt" id="prompt">Loading…</div>
+        <div class="hint">Swipe left for <strong>Opinion</strong>, right for <strong>Fact</strong>. (← / → works too)</div>
+        <div class="sticker">
+          <div id="stamp-good" class="stamp good">Correct</div>
+          <div id="stamp-bad" class="stamp bad">Try Again</div>
+        </div>
+      </div>
+
+      <div class="end" id="end">
+        <h2>Round complete!</h2>
+        <p id="summary"></p>
+        <div id="review"></div>
+        <div class="controls">
+          <button id="play-again" class="primary">Play again</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="pile fact" id="pile-fact" aria-label="Fact pile" tabindex="0">
+      <div>
+        <h2>Fact</h2>
+        <small>Swipe / drop right</small>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>Tip: Use <kbd>←</kbd> and <kbd>→</kbd> to sort quickly. <span id="a11y-msg" class="sr-only" aria-live="polite"></span></div>
+    <div class="controls">
+      <button id="opinion-btn" title="Send to Opinion (Left)">← Opinion</button>
+      <button id="fact-btn" class="primary" title="Send to Fact (Right)">Fact →</button>
+      <button id="undo-btn" title="Undo last move">Undo</button>
+      <button id="reset-btn" title="Reset and reshuffle">Reset</button>
+    </div>
+  </footer>
+
+  <!-- Wrong-choice modal -->
+  <div id="wrong-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="wrong-title" aria-describedby="wrong-body">
+    <div class="modal">
+      <h3 id="wrong-title">Not quite right</h3>
+      <div class="row" style="margin-bottom:8px">
+        <span class="badge" id="wrong-chosen"></span>
+        <span class="badge" id="wrong-correct"></span>
+      </div>
+      <p id="wrong-quote" style="font-weight:600"></p>
+      <div class="reason" id="wrong-body"></div>
+      <div class="controls" style="margin-top:12px; justify-content:flex-end">
+        <button id="wrong-close" class="primary">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Seed data (Three Insurance themed) ---
+    // Each item: { text, kind: 'opinion'|'fact', difficulty: 'easy'|'medium'|'hard' }
+    const OPINIONS = [
+      // Easy
+      { text: "This is the best insurance Three offers.", kind: 'opinion', difficulty: 'easy' },
+      { text: "You’ll definitely need this cover — phones always get damaged.", kind: 'opinion', difficulty: 'easy' },
+      { text: "Everyone takes insurance on new iPhones.", kind: 'opinion', difficulty: 'easy' },
+      { text: "You’d be crazy not to add this.", kind: 'opinion', difficulty: 'easy' },
+      { text: "It’s a no-brainer — you’ll regret not getting it.", kind: 'opinion', difficulty: 'easy' },
+      // Medium
+      { text: "I’d always recommend going for full cover.", kind: 'opinion', difficulty: 'medium' },
+      { text: "This is our most popular option for good reason.", kind: 'opinion', difficulty: 'medium' },
+      { text: "It’s the best value for money.", kind: 'opinion', difficulty: 'medium' },
+      { text: "I always take insurance myself.", kind: 'opinion', difficulty: 'medium' },
+      { text: "This plan is unbeatable for what you get.", kind: 'opinion', difficulty: 'medium' },
+      { text: "You’ll thank me when something happens.", kind: 'opinion', difficulty: 'medium' },
+      { text: "You can’t go wrong with this one.", kind: 'opinion', difficulty: 'medium' },
+      { text: "I personally think this is worth every penny.", kind: 'opinion', difficulty: 'medium' },
+      { text: "I always tell my customers to take this.", kind: 'opinion', difficulty: 'medium' },
+      { text: "It’s easily the most comprehensive cover available.", kind: 'opinion', difficulty: 'medium' },
+      // Hard
+      { text: "In my opinion, this is the most reliable insurer.", kind: 'opinion', difficulty: 'hard' },
+      { text: "You’ll probably want this — it’s the safest bet.", kind: 'opinion', difficulty: 'hard' },
+      { text: "This might be the best option for you.", kind: 'opinion', difficulty: 'hard' },
+      { text: "I’d choose this myself if I were you.", kind: 'opinion', difficulty: 'hard' },
+      { text: "It’s our premium plan — most customers prefer it.", kind: 'opinion', difficulty: 'hard' },
+      { text: "You won’t find better protection elsewhere.", kind: 'opinion', difficulty: 'hard' },
+      { text: "Trust me, it’s worth it.", kind: 'opinion', difficulty: 'hard' },
+      { text: "It’s basically guaranteed peace of mind.", kind: 'opinion', difficulty: 'hard' },
+      { text: "It’s not expensive when you think about what it covers.", kind: 'opinion', difficulty: 'hard' },
+      { text: "You’ll definitely make use of it at some point.", kind: 'opinion', difficulty: 'hard' }
+    ];
+
+    const FACTS = [
+      // Easy
+      { text: "Three Insurance covers accidental and liquid damage.", kind: 'fact', difficulty: 'easy' },
+      { text: "You can make unlimited screen repair claims.", kind: 'fact', difficulty: 'easy' },
+      { text: "A replacement is usually sent the day after your claim has been approved", kind: 'fact', difficulty: 'easy' },
+      { text: "You can cancel anytime with no penalty.", kind: 'fact', difficulty: 'easy' },
+      { text: "The cover starts once your phone is delivered or collected.", kind: 'fact', difficulty: 'easy' },
+      // Medium
+      { text: "You can claim online 24/7 through the Three Insurance portal.", kind: 'fact', difficulty: 'medium' },
+      { text: "Repairs are carried out using genuine manufacturer parts.", kind: 'fact', difficulty: 'medium' },
+      { text: "Worldwide cover is included as standard.", kind: 'fact', difficulty: 'medium' },
+      { text: "You can choose between monthly and annual payments.", kind: 'fact', difficulty: 'medium' },
+      { text: "The policy is provided by SquareTrade", kind: 'fact', difficulty: 'medium' },
+      { text: "Your phone is covered for both loss and theft.", kind: 'fact', difficulty: 'medium' },
+      { text: "There’s no limit on the number of repairs.", kind: 'fact', difficulty: 'medium' },
+      { text: "The excess depends on your phone model.", kind: 'fact', difficulty: 'medium' },
+      { text: "You’ll get your policy documents by email after purchase.", kind: 'fact', difficulty: 'medium' },
+      { text: "You can switch cover to your new phone when you upgrade.", kind: 'fact', difficulty: 'medium' },
+      // Hard
+      { text: "The policy doesn’t cover deliberate or cosmetic damage.", kind: 'fact', difficulty: 'hard' },
+      { text: "You can view your insurance details anytime in the Three app.", kind: 'fact', difficulty: 'hard' },
+      { text: "Some customers add insurance for peace of mind, others prefer not to.", kind: 'fact', difficulty: 'hard' },
+      { text: "You’re free to choose whether you take insurance today or later.", kind: 'fact', difficulty: 'hard' },
+      { text: "This insurance runs separately from your airtime plan.", kind: 'fact', difficulty: 'hard' },
+      { text: "Claims are typically processed within 48 hours.", kind: 'fact', difficulty: 'hard' },
+      { text: "You’ll need proof of purchase if you make a claim.", kind: 'fact', difficulty: 'hard' },
+      { text: "The cover continues even if you change SIMs.", kind: 'fact', difficulty: 'hard' },
+      { text: "You can call the dedicated claims team for support.", kind: 'fact', difficulty: 'hard' },
+      { text: "I can explain what’s covered, and you can decide if it’s right for you.", kind: 'fact', difficulty: 'hard' }
+    ];
+
+    // Explanations for wrong answers — keyed by exact text
+    const EXPLANATIONS = new Map([
+      // Opinions
+      ["This is the best insurance Three offers.", "‘Best’ is a subjective superlative. Unless you define measurable criteria, it’s an opinion."],
+      ["You’ll definitely need this cover — phones always get damaged.", "Predicting the future with certainty and using ‘always’ is speculative."],
+      ["Everyone takes insurance on new iPhones.", "‘Everyone’ is an unfounded generalisation; avoid universal claims."],
+      ["You’d be crazy not to add this.", "Persuasive/judgmental language, not neutral or factual."],
+      ["It’s a no-brainer — you’ll regret not getting it.", "Assumes the customer’s feelings and uses persuasion, not facts."],
+      ["I’d always recommend going for full cover.", "Personal habit (‘I’d always’) is opinion unless supported by the customer’s needs."],
+      ["This is our most popular option for good reason.", "‘For good reason’ adds opinion; popularity alone doesn’t prove suitability."],
+      ["It’s the best value for money.", "‘Best value’ is subjective without stated criteria or data."],
+      ["I always take insurance myself.", "Personal preference isn’t evidence of suitability for the customer."],
+      ["This plan is unbeatable for what you get.", "‘Unbeatable’ is a marketing superlative, not verifiable."],
+      ["You’ll thank me when something happens.", "Predicts future outcomes/feelings; not factual."],
+      ["You can’t go wrong with this one.", "Overconfident assurance; avoids discussing trade‑offs."],
+      ["I personally think this is worth every penny.", "‘I think’ + ‘worth’ signals a value judgement."],
+      ["I always tell my customers to take this.", "Suggests blanket advice rather than needs-based guidance."],
+      ["It’s easily the most comprehensive cover available.", "Another subjective superlative without defined scope/metrics."],
+      ["In my opinion, this is the most reliable insurer.", "Explicitly an opinion; ‘most reliable’ requires comparative data."],
+      ["You’ll probably want this — it’s the safest bet.", "Hedged prediction + ‘safest’ is still subjective."],
+      ["This might be the best option for you.", "‘Best’ remains subjective without criteria; ‘might’ doesn’t make it factual."],
+      ["I’d choose this myself if I were you.", "Personal preference framed as advice; not objective."],
+      ["It’s our premium plan — most customers prefer it.", "‘Most customers prefer’ can be unsubstantiated persuasion if not evidenced."],
+      ["You won’t find better protection elsewhere.", "Unverifiable comparative claim across the whole market."],
+      ["Trust me, it’s worth it.", "Appeal to authority (‘trust me’) and value judgement (‘worth’)."],
+      ["It’s basically guaranteed peace of mind.", "‘Guaranteed’ misleads; peace of mind is subjective."],
+      ["It’s not expensive when you think about what it covers.", "Price judgement depends on personal values/budget."],
+      ["You’ll definitely make use of it at some point.", "Predicts customer behaviour with certainty; not factual."],
+
+      // Facts
+      ["Three Insurance covers accidental and liquid damage.", "States specific covered events; verifiable in the policy wording."],
+      ["You can make unlimited screen repair claims.", "Describes claim limits; factual if stated in policy details."],
+      ["A replacement is usually sent the day after your claim has been approved", "Clarifies fulfilment timing relative to claim approval; avoids promising exact delivery dates."],
+      ["You can cancel anytime with no penalty.", "States cancellation flexibility; factual when in terms."],
+      ["The cover starts once your phone is delivered or collected.", "Defines policy start; verifiable."],
+      ["You can claim online 24/7 through the Three Insurance portal.", "Explains how/when to claim; factual process detail."],
+      ["Repairs are carried out using genuine manufacturer parts.", "Process quality detail; verifiable with repair partner policy."],
+      ["Worldwide cover is included as standard.", "Scope of cover statement; checkable."],
+      ["You can choose between monthly and annual payments.", "Payment options; objective detail."],
+      ["The policy is provided by SquareTrade", "Identifies provider; factual attribution without extra claims."],
+      ["Your phone is covered for both loss and theft.", "Coverage scope; verifiable in the policy."],
+      ["There’s no limit on the number of repairs.", "Describes repair limits; factual if in terms."],
+      ["The excess depends on your phone model.", "States excess varies by device tier; objective detail."],
+      ["You’ll get your policy documents by email after purchase.", "Factual fulfilment process."],
+      ["You can switch cover to your new phone when you upgrade.", "Explains portability of cover; factual process."],
+      ["The policy doesn’t cover deliberate or cosmetic damage.", "A limitation/exclusion; factual."],
+      ["You can view your insurance details anytime in the Three app.", "Access method; factual if supported by app."],
+      ["Some customers add insurance for peace of mind, others prefer not to.", "Balanced behavioural statement without prescribing action."],
+      ["You’re free to choose whether you take insurance today or later.", "Clarifies optionality; compliant and factual."],
+      ["This insurance runs separately from your airtime plan.", "Explains product separation; factual."],
+      ["Claims are typically processed within 48 hours.", "Typical SLAs stated cautiously; factual if accurate to ops."],
+      ["You’ll need proof of purchase if you make a claim.", "Requirement detail; factual."],
+      ["The cover continues even if you change SIMs.", "Clarifies cover is tied to device, not SIM; factual if in terms."],
+      ["You can call the dedicated claims team for support.", "Support channel; factual."],
+      ["I can explain what’s covered, and you can decide if it’s right for you.", "Neutral, customer‑led phrasing; factual and compliant."]
+    ]);
+
+    // Helpers
+    const $ = (sel) => document.querySelector(sel);
+    const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
+    const shuffle = (arr) => arr.map(v => [Math.random(), v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]);
+    const sampleN = (arr, n) => shuffle(arr).slice(0, n);
+
+    // Elements (unchanged)
+    const cardEl = $('#card');
+    const promptEl = $('#prompt');
+    const endEl = $('#end');
+    const summaryEl = $('#summary');
+    const reviewEl = $('#review');
+
+    const stampGood = $('#stamp-good');
+    const stampBad = $('#stamp-bad');
+
+    const pileOpinion = $('#pile-opinion');
+    const pileFact = $('#pile-fact');
+
+    const scoreEl = $('#score');
+    const wrongEl = $('#wrong');
+    const streakEl = $('#streak');
+    const remainingEl = $('#remaining');
+
+    const a11yMsg = $('#a11y-msg');
+
+    const undoBtn = $('#undo-btn');
+    const resetBtn = $('#reset-btn');
+    const playAgainBtn = $('#play-again');
+    const factBtn = $('#fact-btn');
+    const opinionBtn = $('#opinion-btn');
+
+    // Modal
+    const wrongModal = $('#wrong-modal');
+    const wrongClose = $('#wrong-close');
+    const wrongChosen = $('#wrong-chosen');
+    const wrongCorrect = $('#wrong-correct');
+    const wrongQuote = $('#wrong-quote');
+    const wrongBody = $('#wrong-body');
+
+    // State
+    let deck = [];
+    let index = 0;
+    let score = 0;       // correct count
+    let wrong = 0;       // incorrect count
+    let streak = 0;
+    let history = [];    // undo stack: { index, choice, correct }
+    let wrongItems = [];
+
+    // Build a 10-card deck each round: 5 facts + 5 opinions, shuffled
+    function makeDeck() {
+      const picks = [
+        ...sampleN(OPINIONS, 5),
+        ...sampleN(FACTS, 5)
+      ];
+      return shuffle(picks);
+    }
+
+    function setStamp(type, visible) {
+      const target = type === 'good' ? stampGood : stampBad;
+      target.style.opacity = visible ? 1 : 0;
+      target.style.transform = visible ? 'scale(1) rotate(0deg)'
+        : (type === 'good' ? 'scale(.8) rotate(-6deg)' : 'scale(.8) rotate(6deg)');
+    }
+
+    function updateHud() {
+      scoreEl.textContent = `Correct: ${score}`;
+      wrongEl.textContent = `Wrong: ${wrong}`;
+      remainingEl.textContent = `Left: ${deck.length - index}`;
+      streakEl.textContent = `Streak: ${streak}`;
+    }
+
+    function loadCard() {
+      if (index >= deck.length) return endRound();
+      const item = deck[index];
+      promptEl.textContent = item.text;
+      cardEl.style.transform = 'translate(0px, 0px) rotate(0deg)';
+      setStamp('good', false); setStamp('bad', false);
+      cardEl.setAttribute('aria-label', `Card ${index+1} of ${deck.length} (${item.kind}, ${item.difficulty}): ${item.text}`);
+      updateHud();
+    }
+
+    function endRound() {
+      cardEl.style.display = 'none';
+      endEl.classList.add('visible');
+      const total = deck.length, pct = total ? Math.round((score/total)*100) : 0;
+      summaryEl.textContent = `You scored ${score}/${total} (${pct}%).`;
+      if (wrongItems.length) {
+        const items = wrongItems.map(w => `<li><strong>${w.text}</strong> → correct: <em>${w.kind}</em> (you chose ${w.choice})</li>`).join('');
+        reviewEl.innerHTML = `<p>Review your mistakes:</p><ul style="text-align:left; line-height:1.6;">${items}</ul>`;
+      } else {
+        reviewEl.innerHTML = `<p>Flawless! No mistakes to review.</p>`;
+      }
+    }
+
+    function resetGame(reshuffle=true) {
+      cardEl.style.display = '';
+      endEl.classList.remove('visible');
+      if (reshuffle) deck = makeDeck();
+      index = 0; score = 0; wrong = 0; streak = 0; history = []; wrongItems = [];
+      updateHud();
+      loadCard();
+    }
+
+    function handleChoice(choice) {
+      if (index >= deck.length) return;
+      const item = deck[index];
+      const correct = (choice === item.kind);
+
+      history.push({ index, choice, correct });
+
+      if (correct) {
+        score++; streak++;
+        setStamp('good', true); a11yMsg.textContent = 'Correct';
+        updateHud();
+        setTimeout(() => { index++; setStamp('good', false); loadCard(); }, 900);
+      } else {
+        wrong++; streak = 0; setStamp('bad', true); a11yMsg.textContent = 'Incorrect';
+        wrongItems.push({ ...item, choice });
+        updateHud();
+        showWrongModal(item, choice);
+      }
+    }
+
+    // Modal helpers
+    function showWrongModal(item, choice) {
+      const chosenLabel = choice.charAt(0).toUpperCase() + choice.slice(1);
+      const correctLabel = item.kind.charAt(0).toUpperCase() + item.kind.slice(1);
+      wrongChosen.textContent = `You chose: ${chosenLabel}`;
+      wrongCorrect.textContent = `Correct: ${correctLabel}`;
+      wrongQuote.textContent = `“${item.text}”`;
+      wrongBody.textContent = EXPLANATIONS.get(item.text) || `This wording uses cues that align more with a ${correctLabel} statement.`;
+      wrongModal.classList.add('visible');
+      setTimeout(() => wrongClose.focus(), 0);
+    }
+
+    function hideWrongModal() {
+      wrongModal.classList.remove('visible');
+      setStamp('bad', false);
+      index++;
+      loadCard();
+    }
+
+    wrongClose.addEventListener('click', hideWrongModal);
+    wrongModal.addEventListener('click', (e) => { if (e.target === wrongModal) hideWrongModal(); });
+    window.addEventListener('keydown', (e) => {
+      if (wrongModal.classList.contains('visible') && (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault(); hideWrongModal();
+      }
+    });
+
+    // Drag / swipe (unchanged)
+    let startX = 0, startY = 0, curX = 0, curY = 0, dragging = false;
+
+    function onPointerDown(e) {
+      dragging = true; cardEl.classList.add('grabbing');
+      const point = e.touches ? e.touches[0] : e;
+      startX = point.clientX; startY = point.clientY;
+      if (cardEl.setPointerCapture && e.pointerId) cardEl.setPointerCapture(e.pointerId);
+    }
+
+    function onPointerMove(e) {
+      if (!dragging) return;
+      const point = e.touches ? e.touches[0] : e;
+      curX = point.clientX - startX; curY = point.clientY - startY;
+      const rot = clamp(curX / 18, -14, 14);
+      cardEl.style.transform = `translate(${curX}px, ${curY}px) rotate(${rot}deg)`;
+
+      const threshold = 100;
+      pileOpinion.classList.toggle('active', curX < -threshold);
+      pileFact.classList.toggle('active', curX > threshold);
+    }
+
+    function onPointerUp() {
+      if (!dragging) return;
+      dragging = false; cardEl.classList.remove('grabbing');
+      pileOpinion.classList.remove('active');
+      pileFact.classList.remove('active');
+
+      const threshold = 120;
+      if (curX > threshold) { animateOut('right'); handleChoice('fact'); }
+      else if (curX < -threshold) { animateOut('left'); handleChoice('opinion'); }
+      else {
+        cardEl.style.transition = 'transform .2s ease';
+        cardEl.style.transform = 'translate(0px, 0px) rotate(0deg)';
+        setTimeout(() => { cardEl.style.transition = ''; }, 200);
+        setStamp('good', false); setStamp('bad', false);
+      }
+      curX = curY = 0;
+    }
+
+    function animateOut(dir) {
+      const x = dir === 'right' ? 800 : -800;
+      cardEl.style.transition = 'transform .22s ease-out';
+      cardEl.style.transform = `translate(${x}px, ${curY}px) rotate(${dir==='right'?12:-12}deg)`;
+      setTimeout(() => { cardEl.style.transition = ''; cardEl.style.transform = 'translate(0px,0px)'; }, 240);
+    }
+
+    // Mouse
+    cardEl.addEventListener('mousedown', onPointerDown);
+    window.addEventListener('mousemove', onPointerMove);
+    window.addEventListener('mouseup', onPointerUp);
+    // Touch
+    cardEl.addEventListener('touchstart', onPointerDown, { passive:true });
+    window.addEventListener('touchmove', onPointerMove, { passive:true });
+    window.addEventListener('touchend', onPointerUp);
+
+    // Keyboard shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (endEl.classList.contains('visible') || wrongModal.classList.contains('visible')) return;
+      if (e.key === 'ArrowLeft') { e.preventDefault(); animateOut('left'); handleChoice('opinion'); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); animateOut('right'); handleChoice('fact'); }
+      if (e.key === 'r' || e.key === 'R') { resetGame(true); }
+    });
+
+    // Buttons
+    factBtn?.addEventListener('click', () => { if (!wrongModal.classList.contains('visible')) { animateOut('right'); handleChoice('fact'); } });
+    opinionBtn?.addEventListener('click', () => { if (!wrongModal.classList.contains('visible')) { animateOut('left'); handleChoice('opinion'); } });
+    undoBtn?.addEventListener('click', () => {
+      if (wrongModal.classList.contains('visible')) return;
+      const last = history.pop();
+      if (!last) return;
+      index = last.index;
+      if (last.correct) { score = Math.max(0, score - 1); }
+      else { wrong = Math.max(0, wrong - 1); wrongItems = wrongItems.filter((w) => w.text !== deck[index].text); }
+      streak = 0;
+      cardEl.style.display = '';
+      endEl.classList.remove('visible');
+      updateHud();
+      loadCard();
+    });
+    resetBtn?.addEventListener('click', () => resetGame(true));
+    playAgainBtn?.addEventListener('click', () => resetGame(true));
+
+    // Init
+    function init() { deck = makeDeck(); loadCard(); }
+    init();
+
+    // Basic smoke tests (augmented)
+    (function runBasicTests() {
+      const results = [];
+      function assert(name, cond) { results.push({ name, pass: !!cond }); }
+
+      const tDeck = makeDeck();
+      assert('Deck size is 10', tDeck.length === 10);
+      assert('Deck has 5 facts', tDeck.filter(i => i.kind==='fact').length === 5);
+      assert('Deck has 5 opinions', tDeck.filter(i => i.kind==='opinion').length === 5);
+      assert('All items have difficulty labels', tDeck.every(i => ['easy','medium','hard'].includes(i.difficulty)));
+
+      const allTexts = [...OPINIONS, ...FACTS].map(i=>i.text);
+      assert('Explanations provided for all items', allTexts.every(t => EXPLANATIONS.has(t)));
+
+      try { updateHud(); assert('updateHud executes', true); } catch(e) { assert('updateHud executes', false); }
+
+      const failed = results.filter(r => !r.pass);
+      if (failed.length) console.warn('[Three Insurance Game] Basic tests failed:', failed);
+      else console.debug('[Three Insurance Game] All basic tests passed.');
+    })();
+  </script>
+</body>
+</html>
