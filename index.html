@@ -114,8 +114,22 @@
 
     footer{padding:8px clamp(10px,4vw,36px) 12px;color:var(--muted);display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap}
 
-    .end{display:none;text-align:center;gap:12px;padding:16px;border-radius:16px;background:var(--panel);border:1px solid var(--border);box-shadow:var(--shadow)}
-    .end.visible{display:grid}
+    .end{
+  display:none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 60;                 /* higher than piles/card */
+  text-align:center;
+  gap:12px;
+  padding:16px;
+  border-radius:16px;
+  background: var(--panel);
+  border:1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.end.visible{ display:grid; }
 
     /* Modal */
     .modal-backdrop{position:fixed;inset:0;background:rgba(17,24,39,.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:40}
