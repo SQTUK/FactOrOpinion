@@ -5,173 +5,177 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Three Insurance: Fact or Opinion</title>
   <style>
-    :root {
-      /* Brand theme */
-      --pink: #ffbfc5;        /* accent */
-      --pink-soft: #ffdced;   /* page background */
-      --white: #ffffff;       /* card/surface */
+    :root{
+      --pink:#ffbfc5;          /* accent */
+      --pink-soft:#ffdced;     /* page background */
+      --white:#ffffff;         /* card/surface */
 
-      --bg: var(--pink-soft);
-      --panel: var(--white);
-      --muted: #6b7280;       /* slate-500 */
-      --text: #111827;        /* slate-900 */
-      --accent: var(--pink);
-      --good: #22c55e;        /* green-500 */
-      --bad: #ef4444;         /* red-500 */
-      --card: var(--white);
-      --shadow: 0 20px 60px rgba(17, 24, 39, .15);
-      --border: rgba(255, 191, 197, 0.7);
-      --pile-minh: clamp(150px, 28vh, 220px); /* keep piles aligned with card */
+      --bg:var(--pink-soft);
+      --panel:var(--white);
+      --muted:#6b7280;         /* slate-500 */
+      --text:#111827;          /* slate-900 */
+      --accent:var(--pink);
+      --good:#22c55e;          /* green-500 */
+      --bad:#ef4444;           /* red-500 */
+      --card:var(--white);
+      --shadow:0 20px 60px rgba(17,24,39,.15);
+      --border:rgba(255,191,197,.7);
+
+      --pile-minh:clamp(140px,26vh,210px);
     }
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background: radial-gradient(1200px 700px at 50% -10%, var(--pink) 0%, var(--bg) 50%, #fff0 60%), var(--bg);
-      color: var(--text);
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      min-height: 100vh;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Noto Sans",Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      /* solid colour only (no gradient) */
+      background:var(--bg);
+      color:var(--text);
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      min-height:100vh;
     }
 
-    /* Centered brand header */
-    header {
-      background: var(--bg);
-      padding: 32px 20px 16px;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      row-gap: 12px;
+    /* Header */
+    header{
+      background:var(--bg);
+      padding:28px 18px 14px;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      row-gap:10px;
     }
-    .brand img { height: clamp(56px, 10vw, 90px); width: auto; display: block; }
-    .title { font-weight: 800; font-size: clamp(20px, 3.2vw, 38px); letter-spacing: .4px; margin: 0; }
-    .subtitle { color: var(--muted); font-size: clamp(.9rem, 1.8vw, 1rem); }
+    .brand img{height:clamp(52px,9vw,88px);width:auto;display:block}
+    .title{font-weight:800;font-size:clamp(20px,3.2vw,36px);letter-spacing:.4px;margin:0}
+    .subtitle{color:var(--muted);font-size:clamp(.9rem,1.8vw,1rem)}
+    .hud{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:4px}
+    .pill{background:var(--panel);border:1px solid var(--border);padding:8px 12px;border-radius:999px;font-size:clamp(.8rem,1.6vw,.9rem);box-shadow:0 4px 14px rgba(255,191,197,.2)}
 
-    .hud { display:flex; gap: 10px; align-items:center; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
-    .pill { background: var(--panel); border:1px solid var(--border); padding:8px 12px; border-radius: 999px; font-size: clamp(.8rem, 1.6vw, .9rem); box-shadow: 0 4px 14px rgba(255,191,197,.2); }
-
-    /* Desktop: three columns (Opinion | Stage | Fact) */
-    main {
-      padding: 10px clamp(12px, 4vw, 40px) 30px;
-      display: grid;
-      grid-template-columns: 1fr min(680px, 92vw) 1fr; /* Opinion (left), Stage (middle), Fact (right) */
-      grid-template-areas: "opinion stage fact";
-      gap: 18px;
-      align-items: center; /* center piles vertically with card */
+    /* Layout */
+    main{
+      padding:8px clamp(12px,4vw,40px) 24px;
+      display:grid;
+      grid-template-columns:1fr min(680px,92vw) 1fr;
+      grid-template-areas:"opinion stage fact";
+      gap:18px;
+      align-items:center;       /* align piles with card vertically */
     }
-    .pile.opinion { grid-area: opinion; }
-    .stage { grid-area: stage; }
-    .pile.fact { grid-area: fact; }
+    .pile.opinion{grid-area:opinion}
+    .stage{grid-area:stage}
+    .pile.fact{grid-area:fact}
 
-    .pile {
-      border: 2px dashed var(--border); border-radius: 18px; padding: clamp(12px, 1.8vw, 18px); min-height: var(--pile-minh);
-      display: grid; place-items: center; text-align: center; position: relative;
-      background: linear-gradient(180deg, rgba(255,191,197,.10), rgba(255,191,197,0));
-      width: min(680px, 92vw);
-      margin-inline: auto;
+    .pile{
+      border:2px dashed var(--border);
+      border-radius:18px;
+      padding:clamp(10px,1.4vw,16px) clamp(10px,1.6vw,18px);
+      min-height:var(--pile-minh);
+      display:grid;place-items:center;text-align:center;position:relative;
+      background:var(--panel);
+      width:min(680px,92vw);
+      margin-inline:auto;
     }
-    .pile h2 { margin: 0; font-size: clamp(16px, 2vw, 22px); letter-spacing:.6px; }
-    .pile small { color: var(--muted); font-size: clamp(.75rem, 1.6vw, .9rem); }
+    .pile h2{margin:0;font-size:clamp(16px,2vw,22px);letter-spacing:.6px}
+    .pile small{color:var(--muted);font-size:clamp(.75rem,1.5vw,.9rem)}
+    .pile.opinion{box-shadow:inset 0 0 0 1px rgba(239,68,68,.12)}
+    .pile.fact{box-shadow:inset 0 0 0 1px rgba(34,197,94,.12)}
+    .pile.active.opinion{border-color:rgba(239,68,68,.5);background:rgba(239,68,68,.06)}
+    .pile.active.fact{border-color:rgba(34,197,94,.5);background:rgba(34,197,94,.06)}
 
-    .pile.opinion { box-shadow: inset 0 0 0 1px rgba(239,68,68,.12); }
-    .pile.fact { box-shadow: inset 0 0 0 1px rgba(34,197,94,.12); }
+    .stage{position:relative;height:min(60vh,520px);display:grid;place-items:center}
 
-    .pile.active.opinion { border-color: rgba(239,68,68,.5); background: rgba(239,68,68,.06); }
-    .pile.active.fact { border-color: rgba(34,197,94,.5); background: rgba(34,197,94,.06); }
-
-    .stage { position: relative; height: min(64vh, 520px); display:grid; place-items:center; }
-
-    .card {
-      width: min(560px, 92vw); min-height: clamp(150px, 28vh, 220px); max-width: 560px;
-      background: var(--card);
-      border: 1px solid var(--border); border-radius: clamp(16px, 2.2vw, 24px); padding: 26px clamp(16px, 3vw, 28px);
-      box-shadow: var(--shadow); position: relative; will-change: transform;
-      touch-action: none; user-select: none; cursor: grab;
-      display: grid; align-content: center; text-align: center; gap: 14px;
+    .card{
+      width:min(560px,92vw);min-height:clamp(140px,26vh,210px);max-width:560px;
+      background:var(--card);
+      border:1px solid var(--border);border-radius:clamp(16px,2.2vw,24px);
+      padding:22px clamp(16px,3vw,26px);
+      box-shadow:var(--shadow);position:relative;will-change:transform;
+      touch-action:none;user-select:none;cursor:grab;
+      display:grid;align-content:center;text-align:center;gap:12px;
     }
-    .card.grabbing { cursor: grabbing; }
-    .prompt { font-size: clamp(16px, 2.6vw, 26px); line-height: 1.25; }
-    .hint { color: var(--muted); font-size: clamp(.8rem, 1.8vw, .95rem); }
+    .card.grabbing{cursor:grabbing}
+    .prompt{font-size:clamp(16px,2.6vw,24px);line-height:1.25}
+    .hint{color:var(--muted);font-size:clamp(.8rem,1.8vw,.95rem)}
 
-    .sticker { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
-    .stamp { font-weight: 800; letter-spacing: 2px; text-transform:uppercase; font-size: clamp(14px, 1.8vw, 18px); padding: 6px 12px; border-radius: 10px; border:2px solid currentColor; opacity:0; transform: scale(.8) rotate(-6deg); transition: opacity .15s ease, transform .15s ease; }
-    .stamp.good { color: var(--good); background: rgba(34,197,94,.08); }
-    .stamp.bad { color: var(--bad); background: rgba(239,68,68,.08); transform: scale(.8) rotate(6deg); }
+    .sticker{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+    .stamp{font-weight:800;letter-spacing:2px;text-transform:uppercase;font-size:clamp(14px,1.8vw,18px);padding:6px 12px;border-radius:10px;border:2px solid currentColor;opacity:0;transform:scale(.8) rotate(-6deg);transition:opacity .15s ease,transform .15s ease}
+    .stamp.good{color:var(--good);background:rgba(34,197,94,.08)}
+    .stamp.bad{color:var(--bad);background:rgba(239,68,68,.08);transform:scale(.8) rotate(6deg)}
 
-    .controls { display:flex; gap: 10px; justify-content:center; margin-top: 12px; flex-wrap: wrap; }
-    button {
-      background: var(--panel); color: var(--text); border: 1px solid var(--border); padding: 10px 14px; border-radius: 12px;
-      font: inherit; cursor: pointer; transition: transform .06s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
-      box-shadow: 0 8px 18px rgba(255,191,197,.25);
-      font-size: clamp(.85rem, 1.8vw, 1rem);
+    .controls{display:flex;gap:10px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+    button{
+      background:var(--panel);color:var(--text);border:1px solid var(--border);padding:10px 14px;border-radius:12px;
+      font:inherit;cursor:pointer;transition:transform .06s ease,background .2s ease,border-color .2s ease,box-shadow .2s ease;
+      box-shadow:0 8px 18px rgba(255,191,197,.25);
+      font-size:clamp(.85rem,1.8vw,1rem);
     }
-    button:hover { background: #fff; }
-    button:active { transform: translateY(1px); }
-    .primary { border-color: var(--accent); background: var(--panel); }
+    button:hover{background:#fff}
+    button:active{transform:translateY(1px)}
+    .primary{border-color:var(--accent)}
 
-    footer { padding: 8px clamp(12px, 4vw, 40px) 26px; color: var(--muted); font-size: clamp(.85rem, 1.6vw, .95rem); display:flex; justify-content:center; align-items:center; gap:12px; flex-wrap: wrap; }
+    footer{padding:8px clamp(12px,4vw,40px) 18px;color:var(--muted);display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap}
 
-    .end { display: none; text-align: center; gap: 14px; padding: 20px; border-radius: 18px; background: var(--panel); border:1px solid var(--border); box-shadow: var(--shadow); }
-    .end.visible { display: grid; }
+    .end{display:none;text-align:center;gap:14px;padding:18px;border-radius:18px;background:var(--panel);border:1px solid var(--border);box-shadow:var(--shadow)}
+    .end.visible{display:grid}
 
     /* Modal */
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(17,24,39,.45); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 40; }
-    .modal-backdrop.visible { display: flex; }
-    .modal { background: var(--panel); color: var(--text); border: 1px solid var(--border); border-radius: 18px; max-width: 640px; width: min(640px, 92vw); box-shadow: 0 30px 80px rgba(17,24,39,.35); padding: 18px 18px 14px; }
-    .modal h3 { margin: 0 0 8px 0; font-size: clamp(1rem, 2.2vw, 1.15rem); }
-    .modal p { margin: 8px 0; color: var(--text); }
-    .modal .reason { background: linear-gradient(180deg, rgba(255,191,197,.18), rgba(255,191,197,.06)); border: 1px dashed var(--border); border-radius: 12px; padding: 12px; }
-    .modal .row { display:flex; gap: 10px; align-items:center; flex-wrap: wrap; }
-    .badge { padding: 4px 8px; border-radius: 999px; border:1px solid var(--border); background: var(--panel); font-size: clamp(.75rem, 1.6vw, .85rem); }
+    .modal-backdrop{position:fixed;inset:0;background:rgba(17,24,39,.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:40}
+    .modal-backdrop.visible{display:flex}
+    .modal{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:18px;max-width:640px;width:min(640px,92vw);box-shadow:0 30px 80px rgba(17,24,39,.35);padding:18px 18px 14px}
+    .modal h3{margin:0 0 8px 0;font-size:clamp(1rem,2.2vw,1.15rem)}
+    .modal p{margin:8px 0}
+    .modal .reason{background:linear-gradient(180deg, rgba(255,191,197,.18), rgba(255,191,197,.06));border:1px dashed var(--border);border-radius:12px;padding:12px}
+    .modal .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .badge{padding:4px 8px;border-radius:999px;border:1px solid var(--border);background:var(--panel);font-size:clamp(.75rem,1.6vw,.85rem)}
 
     /* Accessibility */
-    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
-    :focus-visible { outline: 2px dashed var(--accent); outline-offset: 2px; }
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+    :focus-visible{outline:2px dashed var(--accent);outline-offset:2px}
 
-    /* Stack earlier (≤1200px) so half-screen windows switch to vertical */
-    @media (max-width: 1200px) {
-      main {
-        grid-template-columns: 1fr; /* stack */
+    /* ===== Stacked (portrait/narrow) ===== */
+    @media (max-width:1200px){
+      main{
+        grid-template-columns:1fr;
         grid-template-areas:
           "opinion"
           "stage"
           "fact";
-        gap: 14px;
+        gap:8px;                                 /* tighter gap */
       }
-      .stage { height: min(58vh, 460px); }
-      .pile { width: min(96vw, 720px); min-height: clamp(120px, 22vh, 200px); }
+      .stage{height:min(50vh,440px)}             /* shorter stage */
+      .pile{
+        width:min(96vw,720px);
+        min-height:clamp(100px,18vh,170px);      /* smaller piles */
+        padding:clamp(8px,1.2vw,14px) clamp(10px,1.4vw,16px);
+      }
     }
 
     /* Mobile */
-    @media (max-width: 640px) {
-      header { padding: 18px 12px 8px; row-gap: 8px; }
-      .subtitle { max-width: 28ch; }
-      .brand img { height: 50px; }
-      .title { font-size: clamp(18px, 5vw, 24px); }
-      .hud { gap: 6px; }
-      .pill { padding: 6px 9px; font-size: .8rem; }
-      main { padding: 6px 12px 12px; }
-      .card { width: min(96vw, 520px); min-height: clamp(130px, 26vh, 180px); padding: 16px 12px; }
-      .prompt { font-size: clamp(15px, 4.6vw, 20px); }
-      .hint { display:none; } /* save space */
-      footer { padding: 8px 12px calc(12px + env(safe-area-inset-bottom)); flex-direction: column; gap: 8px; }
-      .controls { flex-wrap: wrap; }
-      button { width: auto; min-height: 38px; }
+    @media (max-width:640px){
+      header{padding:14px 12px 6px;row-gap:8px}
+      .brand img{height:48px}
+      .title{font-size:clamp(18px,5vw,24px)}
+      .hud{gap:6px}
+      .pill{padding:6px 9px;font-size:.8rem}
+      main{padding:6px 12px 8px}
+      .stage{height:min(46vh,400px)}            /* even shorter */
+      .card{width:min(96vw,520px);min-height:clamp(120px,24vh,170px);padding:16px 12px}
+      .prompt{font-size:clamp(15px,4.6vw,20px)}
+      .hint{display:none}                        /* save space */
+      .pile{min-height:clamp(92px,16vh,150px)}
+      footer{padding:8px 12px calc(10px + env(safe-area-inset-bottom))}
     }
 
-    /* Extra-small phones */
-    @media (max-width: 420px) {
-      .pile { min-height: clamp(84px, 18vh, 150px); }
-      .stage { height: min(44vh, 380px); }
+    /* Very small phones */
+    @media (max-width:420px){
+      .stage{height:min(44vh,360px)}
+      .pile{min-height:clamp(84px,15vh,140px)}
     }
 
-    /* Ultra-short height devices (landscape phones, foldables) */
-    @media (max-height: 540px) {
-      .stage { height: 52vh; }
-      .hint { display:none; }
-      .pile { min-height: 110px; }
+    /* Ultra-short height (landscape) */
+    @media (max-height:540px){
+      .stage{height:50vh}
+      .pile{min-height:110px}
     }
   </style>
 </head>
@@ -253,445 +257,380 @@
   </div>
 
   <script>
-    // --- Three Insurance dataset (difficulties removed) ---
+    /* ===== Dataset ===== */
     const OPINIONS = [
-      { text: "I have the perfect solution for you.", kind: 'opinion' },
-      { text: "This is the best insurance we offer.", kind: 'opinion' },
-      { text: "Trust me, you’ll definitely need this.", kind: 'opinion' },
-      { text: "I always recommend this one.", kind: 'opinion' },
-      { text: "In my opinion, this is the most reliable.", kind: 'opinion' },
-      { text: "You really shouldn’t leave without this today.", kind: 'opinion' },
-      { text: "This will cover anything that happens.", kind: 'opinion' },
-      { text: "This is the best plan for you.", kind: 'opinion' },
-      { text: "This is the safest choice for all customers.", kind: 'opinion' },
-      { text: "You'll save money with this plan.", kind: 'opinion' },
-      { text: "This is the sensible option.", kind: 'opinion' },
-      { text: "This cover gives you complete peace of mind.", kind: 'opinion' },
-      { text: "You’ll be fully protected with this plan.", kind: 'opinion' },
-      { text: "Most people go for this one because it’s the best value.", kind: 'opinion' },
-      { text: "You won’t have to worry about repairs ever again.", kind: 'opinion' },
-      { text: "It’s definitely worth it for what you get.", kind: 'opinion' },
-      { text: "It works out cheaper in the long run", kind: 'opinion' },
-      { text: "You’ll save yourself a lot of stress if you take this out now.", kind: 'opinion' },
-      { text: "You’ll want this once you see what it covers", kind: 'opinion' },
-      { text: "You’ll never have to worry about your screen again with this.", kind: 'opinion' },
-      { text: "Don’t worry, you can just cancel later if you change your mind. You might as well take it now.", kind: 'opinion' },
-      { text: "You’ll get your replacement in two days", kind: 'opinion' },
-      { text: "You’ll regret it if you don’t take it and something happens.", kind: 'opinion' },
-      { text: "It protects you from everything that usually goes wrong.", kind: 'opinion' },
-      { text: "You’re protected straight away, so you never need to worry again.", kind: 'opinion' },
-      { text: "Full cover covers everything that could possibly happen to your phone.", kind: 'opinion' },
-      { text: "With full cover you'll get a new phone if yours gets lost or stolen.", kind: 'opinion' },
-      { text: "It’s a no-brainer, why wouldn’t you take it when it’s cheaper than one repair?", kind: 'opinion' },
-      { text: "When I had to claim I got a replacement the next day, that's what you can expect.", kind: 'opinion' },
-      { text: "I broke my screen and they were amazing, I got it repaired the same day and only paid the excess.", kind: 'opinion' },
-      { text: "It’s been worth it every time I’ve needed it", kind: 'opinion' },
-      { text: "I’ve had this plan on all my phones and it’s always been the best option.", kind: 'opinion' },
-      { text: "I’ve had both this and another provider, this one’s miles better.", kind: 'opinion' },
-      { text: "In my experience, other insurers don’t cover enough.", kind: 'opinion' },
-      { text: "Most people who’ve claimed say it’s the best insurance they’ve had.", kind: 'opinion' },
-      { text: "You’ll thank yourself if anything happens, I’ve been there before.", kind: 'opinion' }
+      { text:"I have the perfect solution for you.", kind:'opinion' },
+      { text:"This is the best insurance we offer.", kind:'opinion' },
+      { text:"Trust me, you’ll definitely need this.", kind:'opinion' },
+      { text:"I always recommend this one.", kind:'opinion' },
+      { text:"In my opinion, this is the most reliable.", kind:'opinion' },
+      { text:"You really shouldn’t leave without this today.", kind:'opinion' },
+      { text:"This will cover anything that happens.", kind:'opinion' },
+      { text:"This is the best plan for you.", kind:'opinion' },
+      { text:"This is the safest choice for all customers.", kind:'opinion' },
+      { text:"You'll save money with this plan.", kind:'opinion' },
+      { text:"This is the sensible option.", kind:'opinion' },
+      { text:"This cover gives you complete peace of mind.", kind:'opinion' },
+      { text:"You’ll be fully protected with this plan.", kind:'opinion' },
+      { text:"Most people go for this one because it’s the best value.", kind:'opinion' },
+      { text:"You won’t have to worry about repairs ever again.", kind:'opinion' },
+      { text:"It’s definitely worth it for what you get.", kind:'opinion' },
+      { text:"It works out cheaper in the long run", kind:'opinion' },
+      { text:"You’ll save yourself a lot of stress if you take this out now.", kind:'opinion' },
+      { text:"You’ll want this once you see what it covers", kind:'opinion' },
+      { text:"You’ll never have to worry about your screen again with this.", kind:'opinion' },
+      { text:"Don’t worry, you can just cancel later if you change your mind. You might as well take it now.", kind:'opinion' },
+      { text:"You’ll get your replacement in two days", kind:'opinion' },
+      { text:"You’ll regret it if you don’t take it and something happens.", kind:'opinion' },
+      { text:"It protects you from everything that usually goes wrong.", kind:'opinion' },
+      { text:"You’re protected straight away, so you never need to worry again.", kind:'opinion' },
+      { text:"Full cover covers everything that could possibly happen to your phone.", kind:'opinion' },
+      { text:"With full cover you'll get a new phone if yours gets lost or stolen.", kind:'opinion' },
+      { text:"It’s a no-brainer, why wouldn’t you take it when it’s cheaper than one repair?", kind:'opinion' },
+      { text:"When I had to claim I got a replacement the next day, that's what you can expect.", kind:'opinion' },
+      { text:"I broke my screen and they were amazing, I got it repaired the same day and only paid the excess.", kind:'opinion' },
+      { text:"It’s been worth it every time I’ve needed it", kind:'opinion' },
+      { text:"I’ve had this plan on all my phones and it’s always been the best option.", kind:'opinion' },
+      { text:"I’ve had both this and another provider, this one’s miles better.", kind:'opinion' },
+      { text:"In my experience, other insurers don’t cover enough.", kind:'opinion' },
+      { text:"Most people who’ve claimed say it’s the best insurance they’ve had.", kind:'opinion' },
+      { text:"You’ll thank yourself if anything happens, I’ve been there before.", kind:'opinion' }
     ];
 
     const FACTS = [
-      { text: "I have an idea that might work for you.", kind: 'fact' },
-      { text: "This is one option that could meet your needs.", kind: 'fact' },
-      { text: "I can explain what this insurance covers, and you can decide if it’s right for you.", kind: 'fact' },
-      { text: "Some customers choose this for extra peace of mind.", kind: 'fact' },
-      { text: "There are a few options, let me walk you through them.", kind: 'fact' },
-      { text: "Screen damage is covered, cosmetic scratches are not", kind: 'fact' },
-      { text: "You can cancel within the cooling-off period for a full refund if no claim is made.", kind: 'fact' },
-      { text: "The monthly premium is £X. Over 12 months that totals £X.", kind: 'fact' },
-      { text: "Loss and theft are included on our full cover plan. If loss cover is important, our full cover includes it.", kind: 'fact' },
-      { text: "The insurer aims to approve valid claims within 48 hours, though that’s not guaranteed.", kind: 'fact' },
-      { text: "A lot of customers only realise how valuable cover like this is once something happens.", kind: 'fact' },
-      { text: "It’s designed to meet common risks like cracked screens and loss, which are the main causes of phone claims.", kind: 'fact' },
-      { text: "Once your claim is accepted, we aim to send a replacement the next day not weeks later.", kind: 'fact' },
-      { text: "The cover starts immediately, you can make a claim when you need to.", kind: 'fact' },
-      { text: "This plan includes both accidental damage and theft, two of the most common claim types in the UK.", kind: 'fact' },
-      { text: "If your phone’s lost or stolen, you’ll get a replacement like-for-like, not a downgrade.", kind: 'fact' },
-      { text: "Claims are approved every day, as long as they meet the policy terms.", kind: 'fact' },
-      { text: "Over a year damage cover on an iPhone 17 Pro Max costs less than repairing a cracked screen once with Apple.", kind: 'fact' },
-      { text: "When I broke my phone screen I had to pay £289 to Apple to get it repaired.", kind: 'fact' },
-      { text: "I’ve had this cover on my own phone for years, I like knowing I can claim if something happens.", kind: 'fact' },
-      { text: "I actually claimed last year and got my replacement the next day, it was really smooth.", kind: 'fact' },
-      { text: "I’ve seen how expensive repairs can be, this cover really helps avoid that.", kind: 'fact' },
-      { text: "I’ve had insurance on every phone I’ve owned.", kind: 'fact' }
+      { text:"I have an idea that might work for you.", kind:'fact' },
+      { text:"This is one option that could meet your needs.", kind:'fact' },
+      { text:"I can explain what this insurance covers, and you can decide if it’s right for you.", kind:'fact' },
+      { text:"Some customers choose this for extra peace of mind.", kind:'fact' },
+      { text:"There are a few options, let me walk you through them.", kind:'fact' },
+      { text:"Screen damage is covered, cosmetic scratches are not", kind:'fact' },
+      { text:"You can cancel within the cooling-off period for a full refund if no claim is made.", kind:'fact' },
+      { text:"The monthly premium is £X. Over 12 months that totals £X.", kind:'fact' },
+      { text:"Loss and theft are included on our full cover plan. If loss cover is important, our full cover includes it.", kind:'fact' },
+      { text:"The insurer aims to approve valid claims within 48 hours, though that’s not guaranteed.", kind:'fact' },
+      { text:"A lot of customers only realise how valuable cover like this is once something happens.", kind:'fact' },
+      { text:"It’s designed to meet common risks like cracked screens and loss, which are the main causes of phone claims.", kind:'fact' },
+      { text:"Once your claim is accepted, we aim to send a replacement the next day not weeks later.", kind:'fact' },
+      { text:"The cover starts immediately, you can make a claim when you need to.", kind:'fact' },
+      { text:"This plan includes both accidental damage and theft, two of the most common claim types in the UK.", kind:'fact' },
+      { text:"If your phone’s lost or stolen, you’ll get a replacement like-for-like, not a downgrade.", kind:'fact' },
+      { text:"Claims are approved every day, as long as they meet the policy terms.", kind:'fact' },
+      { text:"Over a year damage cover on an iPhone 17 Pro Max costs less than repairing a cracked screen once with Apple.", kind:'fact' },
+      { text:"When I broke my phone screen I had to pay £289 to Apple to get it repaired.", kind:'fact' },
+      { text:"I’ve had this cover on my own phone for years, I like knowing I can claim if something happens.", kind:'fact' },
+      { text:"I actually claimed last year and got my replacement the next day, it was really smooth.", kind:'fact' },
+      { text:"I’ve seen how expensive repairs can be, this cover really helps avoid that.", kind:'fact' },
+      { text:"I’ve had insurance on every phone I’ve owned.", kind:'fact' }
     ];
 
-    // Explanations for wrong answers — keyed by exact text
-    const EXPLANATIONS = new Map([
-      // Opinions explanations
-      ["I have the perfect solution for you.", "Assumes the customer’s needs are already known. Avoid claiming a ‘perfect’ solution before exploring the customer’s situation."],
-      ["This is the best insurance we offer.", "‘Best’ is subjective and not verifiable. It implies superiority without context or comparison."],
-      ["Trust me, you’ll definitely need this.", "Trust comes from transparency, not persuasion. ‘Definitely need’ removes customer choice and adds pressure."],
-      ["I always recommend this one.", "Personal recommendation language implies bias and preference instead of letting the customer decide."],
-      ["In my opinion, this is the most reliable.", "Reliability should be explained through features/terms, not personal judgement."],
-      ["You really shouldn’t leave without this today.", "Creates urgency/FOMO. Time pressure prevents informed decision-making."],
-      ["This will cover anything that happens.", "No insurance covers everything. This overstates what the product does."],
-      ["This is the best plan for you.", "Assumes suitability without fact-finding. Avoid declaring ‘best’ before understanding needs."],
-      ["This is the safest choice for all customers.", "Statements about what ‘all customers’ should do are non-compliant; advice must be personalised."],
-      ["You'll save money with this plan.", "Savings depend on whether the customer claims. It’s speculative to promise savings."],
-      ["This is the sensible option.", "Implies not buying is foolish; this is emotional pressure, not balanced information."],
-      ["This cover gives you complete peace of mind.", "‘Peace of mind’ is emotional. Advisors shouldn’t promise feelings or outcomes."],
-      ["You’ll be fully protected with this plan.", "‘Fully protected’ is misleading. There are always exclusions, limits and excesses."],
-      ["Most people go for this one because it’s the best value.", "‘Most people’ is social proof that can manipulate choice. Popularity ≠ suitability."],
-      ["You won’t have to worry about repairs ever again.", "‘Ever again’ exaggerates impact and is not factual."],
-      ["It’s definitely worth it for what you get.", "‘Worth it’ is a personal judgement; value varies by customer."],
-      ["It works out cheaper in the long run", "Only true for some. Predicting savings is speculative."],
-      ["You’ll save yourself a lot of stress if you take this out now.", "Uses fear/urgency to influence purchase; that’s pressure selling."],
-      ["You’ll want this once you see what it covers", "Assumes the customer’s reaction; removes their autonomy."],
-      ["You’ll never have to worry about your screen again with this.", "Promises worry-free ownership. Cover has limits and excesses."],
-      ["Don’t worry, you can just cancel later if you change your mind. You might as well take it now.", "Misuses the cooling-off period to push a sale. Customers must choose freely, not ‘try then cancel’."],
-      ["You’ll get your replacement in two days", "Timeframes are aims, not guarantees. Present them cautiously."],
-      ["You’ll regret it if you don’t take it and something happens.", "Relies on guilt/fear; that’s undue pressure."],
-      ["It protects you from everything that usually goes wrong.", "Overstates scope with ‘everything’. Be precise about covered risks."],
-      ["You’re protected straight away, so you never need to worry again.", "Immediate cover may be factual, but ‘never worry again’ is emotional/absolute."],
-      ["Full cover covers everything that could possibly happen to your phone.", "No policy covers every possible event; avoid absolute claims."],
-      ["With full cover you'll get a new phone if yours gets lost or stolen.", "Replacements are usually refurbished/like-for-like. Saying ‘new’ is misleading."],
-      ["It’s a no-brainer, why wouldn’t you take it when it’s cheaper than one repair?", "Challenges the customer’s reasoning; pressuring language isn’t appropriate."],
-      ["When I had to claim I got a replacement the next day, that's what you can expect.", "Personal experience shouldn’t be promised as typical; timelines vary."],
-      ["I broke my screen and they were amazing, I got it repaired the same day and only paid the excess.", "Anecdotes may not represent usual outcomes; avoid implying guarantees."],
-      ["It’s been worth it every time I’ve needed it", "Subjective value statement; keep the discussion factual and personalised."],
-      ["I’ve had this plan on all my phones and it’s always been the best option.", "Personal endorsement suggests universal suitability; avoid ‘always/best’."],
-      ["I’ve had both this and another provider, this one’s miles better.", "Comparative claims need evidence; avoid broad competitor statements."],
-      ["In my experience, other insurers don’t cover enough.", "Anecdotal and potentially inaccurate; focus on what this policy covers."],
-      ["Most people who’ve claimed say it’s the best insurance they’ve had.", "Unverifiable popularity claim; stick to features and limits."],
-      ["You’ll thank yourself if anything happens, I’ve been there before.", "Emotion-led persuasion about regret; provide facts and choices instead."],
+    const EXPLANATIONS=new Map([
+      ["I have the perfect solution for you.","Assumes the customer’s needs are already known. Avoid claiming a ‘perfect’ solution before exploring the customer’s situation."],
+      ["This is the best insurance we offer.","‘Best’ is subjective and not verifiable. It implies superiority without context or comparison."],
+      ["Trust me, you’ll definitely need this.","Trust comes from transparency, not persuasion. ‘Definitely need’ removes customer choice and adds pressure."],
+      ["I always recommend this one.","Personal recommendation language implies bias and preference instead of letting the customer decide."],
+      ["In my opinion, this is the most reliable.","Reliability should be explained through features/terms, not personal judgement."],
+      ["You really shouldn’t leave without this today.","Creates urgency/FOMO. Time pressure prevents informed decision-making."],
+      ["This will cover anything that happens.","No insurance covers everything. This overstates what the product does."],
+      ["This is the best plan for you.","Assumes suitability without fact-finding. Avoid declaring ‘best’ before understanding needs."],
+      ["This is the safest choice for all customers.","Statements about what ‘all customers’ should do are non-compliant; advice must be personalised."],
+      ["You'll save money with this plan.","Savings depend on whether the customer claims. It’s speculative to promise savings."],
+      ["This is the sensible option.","Implies not buying is foolish; this is emotional pressure, not balanced information."],
+      ["This cover gives you complete peace of mind.","‘Peace of mind’ is emotional. Advisors shouldn’t promise feelings or outcomes."],
+      ["You’ll be fully protected with this plan.","‘Fully protected’ is misleading. There are always exclusions, limits and excesses."],
+      ["Most people go for this one because it’s the best value.","‘Most people’ is social proof that can manipulate choice. Popularity ≠ suitability."],
+      ["You won’t have to worry about repairs ever again.","‘Ever again’ exaggerates impact and is not factual."],
+      ["It’s definitely worth it for what you get.","‘Worth it’ is a personal judgement; value varies by customer."],
+      ["It works out cheaper in the long run","Only true for some. Predicting savings is speculative."],
+      ["You’ll save yourself a lot of stress if you take this out now.","Uses fear/urgency to influence purchase; that’s pressure selling."],
+      ["You’ll want this once you see what it covers","Assumes the customer’s reaction; removes their autonomy."],
+      ["You’ll never have to worry about your screen again with this.","Promises worry-free ownership. Cover has limits and excesses."],
+      ["Don’t worry, you can just cancel later if you change your mind. You might as well take it now.","Misuses the cooling-off period to push a sale. Customers must choose freely, not ‘try then cancel’."] ,
+      ["You’ll get your replacement in two days","Timeframes are aims, not guarantees. Present them cautiously."],
+      ["You’ll regret it if you don’t take it and something happens.","Relies on guilt/fear; that’s undue pressure."],
+      ["It protects you from everything that usually goes wrong.","Overstates scope with ‘everything’. Be precise about covered risks."],
+      ["You’re protected straight away, so you never need to worry again.","Immediate cover may be factual, but ‘never worry again’ is emotional/absolute."],
+      ["Full cover covers everything that could possibly happen to your phone.","No policy covers every possible event; avoid absolute claims."],
+      ["With full cover you'll get a new phone if yours gets lost or stolen.","Replacements are usually refurbished/like-for-like. Saying ‘new’ is misleading."],
+      ["It’s a no-brainer, why wouldn’t you take it when it’s cheaper than one repair?","Challenges the customer’s reasoning; pressuring language isn’t appropriate."],
+      ["When I had to claim I got a replacement the next day, that's what you can expect.","Personal experience shouldn’t be promised as typical; timelines vary."],
+      ["I broke my screen and they were amazing, I got it repaired the same day and only paid the excess.","Anecdotes may not represent usual outcomes; avoid implying guarantees."],
+      ["It’s been worth it every time I’ve needed it","Subjective value statement; keep the discussion factual and personalised."],
+      ["I’ve had this plan on all my phones and it’s always been the best option.","Personal endorsement suggests universal suitability; avoid ‘always/best’."],
+      ["I’ve had both this and another provider, this one’s miles better.","Comparative claims need evidence; avoid broad competitor statements."],
+      ["In my experience, other insurers don’t cover enough.","Anecdotal and potentially inaccurate; focus on what this policy covers."],
+      ["Most people who’ve claimed say it’s the best insurance they’ve had.","Unverifiable popularity claim; stick to features and limits."],
+      ["You’ll thank yourself if anything happens, I’ve been there before.","Emotion-led persuasion about regret; provide facts and choices instead."],
 
-      // Facts explanations
-      ["I have an idea that might work for you.", "Encourages conversation and explores needs rather than assuming them."],
-      ["This is one option that could meet your needs.", "Acknowledges choice and keeps discussion open and balanced."],
-      ["I can explain what this insurance covers, and you can decide if it’s right for you.", "Empowers the customer to make an informed decision; aligns with fair treatment."],
-      ["Some customers choose this for extra peace of mind.", "Shares insight without pressure or judgement; neutral tone."],
-      ["There are a few options, let me walk you through them.", "Promotes transparency and informed choice; the advisor is helping, not steering."],
-      ["Screen damage is covered, cosmetic scratches are not", "Clear statement of inclusions/exclusions; transparent and accurate."],
-      ["You can cancel within the cooling-off period for a full refund if no claim is made.", "Provides factual information about customer rights."],
-      ["The monthly premium is £X. Over 12 months that totals £X.", "Explains cost clearly with no persuasive framing."],
-      ["Loss and theft are included on our full cover plan. If loss cover is important, our full cover includes it.", "Links features to needs without assumption; balanced and factual."],
-      ["The insurer aims to approve valid claims within 48 hours, though that’s not guaranteed.", "Sets realistic expectations while acknowledging timescales can vary."],
-      ["A lot of customers only realise how valuable cover like this is once something happens.", "Observational, not pressurising; shares insight without suggesting required action."],
-      ["It’s designed to meet common risks like cracked screens and loss, which are the main causes of phone claims.", "Accurate explanation of policy purpose and relevance."],
-      ["Once your claim is accepted, we aim to send a replacement the next day not weeks later.", "Communicates service standards as aims, not guarantees."],
-      ["The cover starts immediately, you can make a claim when you need to.", "Simple, factual activation timing."],
-      ["This plan includes both accidental damage and theft, two of the most common claim types in the UK.", "Provides context without exaggeration."],
-      ["If your phone’s lost or stolen, you’ll get a replacement like-for-like, not a downgrade.", "Clarifies replacements match spec; manages expectations."],
-      ["Claims are approved every day, as long as they meet the policy terms.", "Factually communicates approvals are routine but conditional on terms."],
-      ["Over a year damage cover on an iPhone 17 Pro Max costs less than repairing a cracked screen once with Apple.", "Permissible factual comparison if evidenced at the time."],
-      ["When I broke my phone screen I had to pay £289 to Apple to get it repaired.", "Personal experience framed as fact, not a promise of outcomes."],
-      ["I’ve had this cover on my own phone for years, I like knowing I can claim if something happens.", "Acceptable personal context; avoid directing the customer."],
-      ["I actually claimed last year and got my replacement the next day, it was really smooth.", "Share as one example only; clarify timelines vary."],
-      ["I’ve seen how expensive repairs can be, this cover really helps avoid that.", "Factual observation about cost risk without pressure."],
-      ["I’ve had insurance on every phone I’ve owned.", "Harmless personal fact if shared neutrally; do not imply the customer should do the same."]
+      ["I have an idea that might work for you.","Encourages conversation and explores needs rather than assuming them."],
+      ["This is one option that could meet your needs.","Acknowledges choice and keeps discussion open and balanced."],
+      ["I can explain what this insurance covers, and you can decide if it’s right for you.","Empowers the customer to make an informed decision; aligns with fair treatment."],
+      ["Some customers choose this for extra peace of mind.","Shares insight without pressure or judgement; neutral tone."],
+      ["There are a few options, let me walk you through them.","Promotes transparency and informed choice; the advisor is helping, not steering."],
+      ["Screen damage is covered, cosmetic scratches are not","Clear statement of inclusions/exclusions; transparent and accurate."],
+      ["You can cancel within the cooling-off period for a full refund if no claim is made.","Provides factual information about customer rights."],
+      ["The monthly premium is £X. Over 12 months that totals £X.","Explains cost clearly with no persuasive framing."],
+      ["Loss and theft are included on our full cover plan. If loss cover is important, our full cover includes it.","Links features to needs without assumption; balanced and factual."],
+      ["The insurer aims to approve valid claims within 48 hours, though that’s not guaranteed.","Sets realistic expectations while acknowledging timescales can vary."],
+      ["A lot of customers only realise how valuable cover like this is once something happens.","Observational, not pressurising; shares insight without suggesting required action."],
+      ["It’s designed to meet common risks like cracked screens and loss, which are the main causes of phone claims.","Accurate explanation of policy purpose and relevance."],
+      ["Once your claim is accepted, we aim to send a replacement the next day not weeks later.","Communicates service standards as aims, not guarantees."],
+      ["The cover starts immediately, you can make a claim when you need to.","Simple, factual activation timing."],
+      ["This plan includes both accidental damage and theft, two of the most common claim types in the UK.","Provides context without exaggeration."],
+      ["If your phone’s lost or stolen, you’ll get a replacement like-for-like, not a downgrade.","Clarifies replacements match spec; manages expectations."],
+      ["Claims are approved every day, as long as they meet the policy terms.","Factually communicates approvals are routine but conditional on terms."],
+      ["Over a year damage cover on an iPhone 17 Pro Max costs less than repairing a cracked screen once with Apple.","Permissible factual comparison if evidenced at the time."],
+      ["When I broke my phone screen I had to pay £289 to Apple to get it repaired.","Personal experience framed as fact, not a promise of outcomes."],
+      ["I’ve had this cover on my own phone for years, I like knowing I can claim if something happens.","Acceptable personal context; avoid directing the customer."],
+      ["I actually claimed last year and got my replacement the next day, it was really smooth.","Share as one example only; clarify timelines vary."],
+      ["I’ve seen how expensive repairs can be, this cover really helps avoid that.","Factual observation about cost risk without pressure."],
+      ["I’ve had insurance on every phone I’ve owned.","Harmless personal fact if shared neutrally; do not imply the customer should do the same."]
     ]);
 
-    // --- Helpers ---
-    const $ = (sel) => document.querySelector(sel);
-    const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
-    const shuffle = (arr) => arr.map(v => [Math.random(), v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]);
-    const sampleN = (arr, n) => shuffle(arr).slice(0, n);
+    /* ===== Helpers & Elements ===== */
+    const $=s=>document.querySelector(s);
+    const clamp=(n,min,max)=>Math.min(Math.max(n,min),max);
+    const shuffle=arr=>arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]);
+    const sampleN=(arr,n)=>shuffle(arr).slice(0,n);
 
-    // Orientation media query — stacked (vertical) under 1200px
-    const mqStack = window.matchMedia('(max-width: 1200px)');
-    let vertical = mqStack.matches;
+    const mqStack=window.matchMedia('(max-width:1200px)');
+    let vertical=mqStack.matches;
+    const getSwipeThreshold=()=>vertical
+      ? Math.max(60,Math.min(140,Math.floor(window.innerHeight*0.20)))
+      : Math.max(60,Math.min(160,Math.floor(window.innerWidth*0.22)));
 
-    const getSwipeThreshold = () => {
-      if (vertical) return Math.max(60, Math.min(160, Math.floor(window.innerHeight * 0.22)));
-      return Math.max(60, Math.min(160, Math.floor(window.innerWidth * 0.22)));
-    };
+    const subtitleEl=$('.subtitle');
+    const hintEl=$('.hint');
 
-    // --- Elements ---
-    const subtitleEl = document.querySelector('.subtitle');
-    const hintEl = document.querySelector('.hint');
+    const cardEl=$('#card');
+    const promptEl=$('#prompt');
+    const endEl=$('#end');
+    const summaryEl=$('#summary');
+    const reviewEl=$('#review');
 
-    const cardEl = $('#card');
-    const promptEl = $('#prompt');
-    const endEl = $('#end');
-    const summaryEl = $('#summary');
-    const reviewEl = $('#review');
+    const stampGood=$('#stamp-good');
+    const stampBad=$('#stamp-bad');
 
-    const stampGood = $('#stamp-good');
-    const stampBad = $('#stamp-bad');
+    const pileOpinion=$('#pile-opinion');
+    const pileFact=$('#pile-fact');
 
-    const pileOpinion = $('#pile-opinion');
-    const pileFact = $('#pile-fact');
+    const scoreEl=$('#score');
+    const wrongEl=$('#wrong');
+    const streakEl=$('#streak');
+    const remainingEl=$('#remaining');
 
-    const scoreEl = $('#score');
-    const wrongEl = $('#wrong');
-    const streakEl = $('#streak');
-    const remainingEl = $('#remaining');
+    const a11yMsg=$('#a11y-msg');
 
-    const a11yMsg = $('#a11y-msg');
-
-    const undoBtn = $('#undo-btn');
-    const resetBtn = $('#reset-btn');
-    const playAgainBtn = $('#play-again');
-    const factBtn = $('#fact-btn');
-    const opinionBtn = $('#opinion-btn');
+    const undoBtn=$('#undo-btn');
+    const resetBtn=$('#reset-btn');
+    const playAgainBtn=$('#play-again');
+    const factBtn=$('#fact-btn');
+    const opinionBtn=$('#opinion-btn');
 
     // Modal
-    const wrongModal = $('#wrong-modal');
-    const wrongClose = $('#wrong-close');
-    const wrongChosen = $('#wrong-chosen');
-    const wrongCorrect = $('#wrong-correct');
-    const wrongQuote = $('#wrong-quote');
-    const wrongBody = $('#wrong-body');
+    const wrongModal=$('#wrong-modal');
+    const wrongClose=$('#wrong-close');
+    const wrongChosen=$('#wrong-chosen');
+    const wrongCorrect=$('#wrong-correct');
+    const wrongQuote=$('#wrong-quote');
+    const wrongBody=$('#wrong-body');
 
-    // --- State ---
-    let deck = [];
-    let index = 0;
-    let score = 0;       // correct count
-    let wrong = 0;       // incorrect count
-    let streak = 0;
-    let history = [];    // undo stack: { index, choice, correct }
-    let wrongItems = [];
+    // State
+    let deck=[],index=0,score=0,wrong=0,streak=0,history=[],wrongItems=[];
 
-    function updateMode() {
-      vertical = mqStack.matches;
-      document.body.dataset.orient = vertical ? 'vertical' : 'horizontal';
-      // Update helper texts
-      const opSmall = document.querySelector('#pile-opinion small');
-      const faSmall = document.querySelector('#pile-fact small');
-      if (vertical) {
-        if (subtitleEl) subtitleEl.innerHTML = 'Drag the card <strong>up</strong> for <strong>Opinion</strong> or <strong>down</strong> for <strong>Fact</strong>, or use your arrow keys.';
-        if (hintEl) hintEl.innerHTML = 'Swipe up for <strong>Opinion</strong>, down for <strong>Fact</strong>. (↑ / ↓ works too)';
-        if (opSmall) opSmall.textContent = 'Swipe / drop up';
-        if (faSmall) faSmall.textContent = 'Swipe / drop down';
-      } else {
-        if (subtitleEl) subtitleEl.innerHTML = 'Drag the card toward <strong>Opinion</strong> (left) or <strong>Fact</strong> (right), or use your arrow keys.';
-        if (hintEl) hintEl.innerHTML = 'Swipe left for <strong>Opinion</strong>, right for <strong>Fact</strong>. (← / → works too)';
-        if (opSmall) opSmall.textContent = 'Swipe / drop left';
-        if (faSmall) faSmall.textContent = 'Swipe / drop right';
+    function updateMode(){
+      vertical=mqStack.matches;
+      const opSmall=document.querySelector('#pile-opinion small');
+      const faSmall=document.querySelector('#pile-fact small');
+      if(vertical){
+        subtitleEl.innerHTML='Drag the card <strong>up</strong> for <strong>Opinion</strong> or <strong>down</strong> for <strong>Fact</strong>, or use your arrow keys.';
+        hintEl && (hintEl.innerHTML='Swipe up for <strong>Opinion</strong>, down for <strong>Fact</strong>. (↑ / ↓ works too)');
+        opSmall.textContent='Swipe / drop up';
+        faSmall.textContent='Swipe / drop down';
+      }else{
+        subtitleEl.innerHTML='Drag the card toward <strong>Opinion</strong> (left) or <strong>Fact</strong> (right), or use your arrow keys.';
+        hintEl && (hintEl.innerHTML='Swipe left for <strong>Opinion</strong>, right for <strong>Fact</strong>. (← / → works too)');
+        opSmall.textContent='Swipe / drop left';
+        faSmall.textContent='Swipe / drop right';
       }
     }
-    mqStack.addEventListener?.('change', updateMode);
+    mqStack.addEventListener?.('change',updateMode);
 
-    // Build a 10-card deck each round: 5 facts + 5 opinions, shuffled
-    function makeDeck() {
-      const picks = [
-        ...sampleN(OPINIONS, 5),
-        ...sampleN(FACTS, 5)
-      ];
-      return shuffle(picks);
+    function makeDeck(){ return shuffle([...sampleN(OPINIONS,5),...sampleN(FACTS,5)]); }
+
+    function setStamp(type,visible){
+      const t=type==='good'?stampGood:stampBad;
+      t.style.opacity=visible?1:0;
+      t.style.transform=visible?'scale(1) rotate(0deg)'
+        :(type==='good'?'scale(.8) rotate(-6deg)':'scale(.8) rotate(6deg)');
     }
 
-    function setStamp(type, visible) {
-      const target = type === 'good' ? stampGood : stampBad;
-      target.style.opacity = visible ? 1 : 0;
-      target.style.transform = visible ? 'scale(1) rotate(0deg)'
-        : (type === 'good' ? 'scale(.8) rotate(-6deg)' : 'scale(.8) rotate(6deg)');
+    function updateHud(){
+      scoreEl.textContent=`Correct: ${score}`;
+      wrongEl.textContent=`Wrong: ${wrong}`;
+      remainingEl.textContent=`Left: ${deck.length-index}`;
+      streakEl.textContent=`Streak: ${streak}`;
     }
 
-    function updateHud() {
-      scoreEl.textContent = `Correct: ${score}`;
-      wrongEl.textContent = `Wrong: ${wrong}`;
-      remainingEl.textContent = `Left: ${deck.length - index}`;
-      streakEl.textContent = `Streak: ${streak}`;
-    }
-
-    function loadCard() {
-      if (index >= deck.length) return endRound();
-      const item = deck[index];
-      promptEl.textContent = item.text;
-      cardEl.style.transform = 'translate(0px, 0px) rotate(0deg)';
-      setStamp('good', false); setStamp('bad', false);
-      cardEl.setAttribute('aria-label', `Card ${index+1} of ${deck.length}: ${item.text}`);
+    function loadCard(){
+      if(index>=deck.length) return endRound();
+      const item=deck[index];
+      promptEl.textContent=item.text;
+      cardEl.style.transform='translate(0px,0px) rotate(0deg)';
+      setStamp('good',false); setStamp('bad',false);
       updateHud();
     }
 
-    function endRound() {
-      cardEl.style.display = 'none';
+    function endRound(){
+      cardEl.style.display='none';
       endEl.classList.add('visible');
-      const total = deck.length, pct = total ? Math.round((score/total)*100) : 0;
-      summaryEl.textContent = `You scored ${score}/${total} (${pct}%).`;
-      if (wrongItems.length) {
-        const items = wrongItems.map(w => `<li><strong>${w.text}</strong> → correct: <em>${w.kind}</em> (you chose ${w.choice})</li>`).join('');
-        reviewEl.innerHTML = `<p>Review your mistakes:</p><ul style="text-align:left; line-height:1.6;">${items}</ul>`;
-      } else {
-        reviewEl.innerHTML = `<p>Flawless! No mistakes to review.</p>`;
+      const total=deck.length,pct=total?Math.round((score/total)*100):0;
+      summaryEl.textContent=`You scored ${score}/${total} (${pct}%).`;
+      if(wrongItems.length){
+        const items=wrongItems.map(w=>`<li><strong>${w.text}</strong> → correct: <em>${w.kind}</em> (you chose ${w.choice})</li>`).join('');
+        reviewEl.innerHTML=`<p>Review your mistakes:</p><ul style="text-align:left;line-height:1.6;">${items}</ul>`;
+      }else{
+        reviewEl.innerHTML=`<p>Flawless! No mistakes to review.</p>`;
       }
     }
 
-    function resetGame(reshuffle=true) {
-      cardEl.style.display = '';
+    function resetGame(reshuffle=true){
+      cardEl.style.display='';
       endEl.classList.remove('visible');
-      if (reshuffle) deck = makeDeck();
-      index = 0; score = 0; wrong = 0; streak = 0; history = []; wrongItems = [];
-      updateHud();
-      loadCard();
+      if(reshuffle) deck=makeDeck();
+      index=0;score=0;wrong=0;streak=0;history=[];wrongItems=[];
+      updateHud();loadCard();
     }
 
-    function handleChoice(choice) {
-      if (index >= deck.length) return;
-      const item = deck[index];
-      const correct = (choice === item.kind);
-
-      history.push({ index, choice, correct });
-
-      if (correct) {
-        score++; streak++;
-        setStamp('good', true); a11yMsg.textContent = 'Correct';
-        updateHud();
-        // Slight pause so the player can acknowledge correctness
-        setTimeout(() => { index++; setStamp('good', false); loadCard(); }, 900);
-      } else {
-        wrong++; streak = 0; setStamp('bad', true); a11yMsg.textContent = 'Incorrect';
-        wrongItems.push({ ...item, choice });
-        updateHud();
-        showWrongModal(item, choice);
+    function handleChoice(choice){
+      if(index>=deck.length) return;
+      const item=deck[index];
+      const correct=(choice===item.kind);
+      history.push({index,choice,correct});
+      if(correct){
+        score++;streak++;setStamp('good',true);a11yMsg.textContent='Correct';updateHud();
+        setTimeout(()=>{ index++; setStamp('good',false); loadCard(); },900);
+      }else{
+        wrong++;streak=0;setStamp('bad',true);a11yMsg.textContent='Incorrect';
+        wrongItems.push({...item,choice});updateHud();showWrongModal(item,choice);
       }
     }
 
-    // Modal helpers
-    function showWrongModal(item, choice) {
-      const chosenLabel = choice.charAt(0).toUpperCase() + choice.slice(1);
-      const correctLabel = item.kind.charAt(0).toUpperCase() + item.kind.slice(1);
-      wrongChosen.textContent = `You chose: ${chosenLabel}`;
-      wrongCorrect.textContent = `Correct: ${correctLabel}`;
-      wrongQuote.textContent = `“${item.text}”`;
-      wrongBody.textContent = EXPLANATIONS.get(item.text) || `This wording uses cues that align more with a ${correctLabel} statement.`;
+    function showWrongModal(item,choice){
+      const chosen=choice[0].toUpperCase()+choice.slice(1);
+      const correct=item.kind[0].toUpperCase()+item.kind.slice(1);
+      wrongChosen.textContent=`You chose: ${chosen}`;
+      wrongCorrect.textContent=`Correct: ${correct}`;
+      wrongQuote.textContent=`“${item.text}”`;
+      wrongBody.textContent=EXPLANATIONS.get(item.text)||`This wording aligns more with a ${correct} statement.`;
       wrongModal.classList.add('visible');
-      setTimeout(() => wrongClose.focus(), 0);
+      setTimeout(()=>wrongClose.focus(),0);
     }
-
-    function hideWrongModal() {
+    function hideWrongModal(){
       wrongModal.classList.remove('visible');
-      setStamp('bad', false);
-      index++;
-      loadCard();
+      setStamp('bad',false);
+      index++;loadCard();
     }
+    wrongClose.addEventListener('click',hideWrongModal);
+    wrongModal.addEventListener('click',e=>{ if(e.target===wrongModal) hideWrongModal(); });
 
-    wrongClose.addEventListener('click', hideWrongModal);
-    wrongModal.addEventListener('click', (e) => { if (e.target === wrongModal) hideWrongModal(); });
-    window.addEventListener('keydown', (e) => {
-      if (wrongModal.classList.contains('visible')) {
-        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); hideWrongModal(); }
-        return;
-      }
-      if (endEl.classList.contains('visible')) return;
-
-      // Keyboard: adapt to orientation (left/right always work; up/down when stacked)
-      if (e.key === 'ArrowLeft')  { e.preventDefault(); animateOut('left');  handleChoice('opinion'); }
-      if (e.key === 'ArrowRight') { e.preventDefault(); animateOut('right'); handleChoice('fact'); }
-      if (e.key === 'ArrowUp' && vertical)   { e.preventDefault(); animateOut('up');   handleChoice('opinion'); }
-      if (e.key === 'ArrowDown' && vertical) { e.preventDefault(); animateOut('down'); handleChoice('fact'); }
-      if (e.key === 'r' || e.key === 'R') { resetGame(true); }
+    /* Input: keyboard */
+    window.addEventListener('keydown',e=>{
+      if(wrongModal.classList.contains('visible')){ if(['Escape','Enter',' '].includes(e.key)){ e.preventDefault(); hideWrongModal(); } return; }
+      if(endEl.classList.contains('visible')) return;
+      if(e.key==='ArrowLeft'){ e.preventDefault(); animateOut('left'); handleChoice('opinion'); }
+      if(e.key==='ArrowRight'){ e.preventDefault(); animateOut('right'); handleChoice('fact'); }
+      if(e.key==='ArrowUp'&&mqStack.matches){ e.preventDefault(); animateOut('up'); handleChoice('opinion'); }
+      if(e.key==='ArrowDown'&&mqStack.matches){ e.preventDefault(); animateOut('down'); handleChoice('fact'); }
+      if(e.key==='r'||e.key==='R'){ resetGame(true); }
     });
 
-    // Drag / swipe — orientation aware
-    let startX = 0, startY = 0, curX = 0, curY = 0, dragging = false;
-
-    function onPointerDown(e) {
-      dragging = true; cardEl.classList.add('grabbing');
-      const point = e.touches ? e.touches[0] : e;
-      startX = point.clientX; startY = point.clientY;
-      if (cardEl.setPointerCapture && e.pointerId) cardEl.setPointerCapture(e.pointerId);
+    /* Drag / swipe */
+    let startX=0,startY=0,curX=0,curY=0,dragging=false;
+    function onPointerDown(e){
+      dragging=true;cardEl.classList.add('grabbing');
+      const p=e.touches?e.touches[0]:e; startX=p.clientX; startY=p.clientY;
+      if(cardEl.setPointerCapture&&e.pointerId) cardEl.setPointerCapture(e.pointerId);
     }
-
-    function onPointerMove(e) {
-      if (!dragging) return;
-      const point = e.touches ? e.touches[0] : e;
-      curX = point.clientX - startX; curY = point.clientY - startY;
-      const rot = clamp(curX / 18, -14, 14); // slight horizontal tilt
-      cardEl.style.transform = `translate(${curX}px, ${curY}px) rotate(${rot}deg)`;
-
-      const threshold = getSwipeThreshold();
-      if (vertical) {
-        pileOpinion.classList.toggle('active', curY < -threshold); // up => opinion
-        pileFact.classList.toggle('active',  curY >  threshold);   // down => fact
-      } else {
-        pileOpinion.classList.toggle('active', curX < -threshold); // left => opinion
-        pileFact.classList.toggle('active',  curX >  threshold);   // right => fact
+    function onPointerMove(e){
+      if(!dragging) return;
+      const p=e.touches?e.touches[0]:e; curX=p.clientX-startX; curY=p.clientY-startY;
+      const rot=clamp(curX/18,-14,14);
+      cardEl.style.transform=`translate(${curX}px,${curY}px) rotate(${rot}deg)`;
+      const t=getSwipeThreshold();
+      if(mqStack.matches){
+        pileOpinion.classList.toggle('active',curY<-t);
+        pileFact.classList.toggle('active',curY> t);
+      }else{
+        pileOpinion.classList.toggle('active',curX<-t);
+        pileFact.classList.toggle('active',curX> t);
       }
     }
-
-    function onPointerUp() {
-      if (!dragging) return;
-      dragging = false; cardEl.classList.remove('grabbing');
-      pileOpinion.classList.remove('active');
-      pileFact.classList.remove('active');
-
-      const threshold = getSwipeThreshold();
-      if (vertical) {
-        if (curY > threshold) { animateOut('down'); handleChoice('fact'); }
-        else if (curY < -threshold) { animateOut('up'); handleChoice('opinion'); }
-        else { snapBack(); }
-      } else {
-        if (curX > threshold) { animateOut('right'); handleChoice('fact'); }
-        else if (curX < -threshold) { animateOut('left'); handleChoice('opinion'); }
-        else { snapBack(); }
+    function onPointerUp(){
+      if(!dragging) return; dragging=false; cardEl.classList.remove('grabbing');
+      pileOpinion.classList.remove('active'); pileFact.classList.remove('active');
+      const t=getSwipeThreshold();
+      if(mqStack.matches){
+        if(curY> t){ animateOut('down'); handleChoice('fact'); }
+        else if(curY<-t){ animateOut('up'); handleChoice('opinion'); }
+        else snapBack();
+      }else{
+        if(curX> t){ animateOut('right'); handleChoice('fact'); }
+        else if(curX<-t){ animateOut('left'); handleChoice('opinion'); }
+        else snapBack();
       }
-      curX = curY = 0;
+      curX=curY=0;
+    }
+    function snapBack(){
+      cardEl.style.transition='transform .2s ease';
+      cardEl.style.transform='translate(0px,0px) rotate(0deg)';
+      setTimeout(()=>{ cardEl.style.transition=''; },200);
+      setStamp('good',false); setStamp('bad',false);
+    }
+    function animateOut(dir){
+      let x=0,y=0,rot=0;
+      if(dir==='right'){ x=800; rot=12; }
+      if(dir==='left'){ x=-800; rot=-12; }
+      if(dir==='down'){ y=800; rot=8; }
+      if(dir==='up'){ y=-800; rot=-8; }
+      cardEl.style.transition='transform .22s ease-out';
+      cardEl.style.transform=`translate(${x}px,${y}px) rotate(${rot}deg)`;
+      setTimeout(()=>{ cardEl.style.transition=''; cardEl.style.transform='translate(0px,0px)'; },240);
     }
 
-    function snapBack() {
-      cardEl.style.transition = 'transform .2s ease';
-      cardEl.style.transform = 'translate(0px, 0px) rotate(0deg)';
-      setTimeout(() => { cardEl.style.transition = ''; }, 200);
-      setStamp('good', false); setStamp('bad', false);
-    }
+    // Mouse/touch bindings
+    cardEl.addEventListener('mousedown',onPointerDown);
+    window.addEventListener('mousemove',onPointerMove);
+    window.addEventListener('mouseup',onPointerUp);
+    cardEl.addEventListener('touchstart',onPointerDown,{passive:true});
+    window.addEventListener('touchmove',onPointerMove,{passive:true});
+    window.addEventListener('touchend',onPointerUp);
 
-    function animateOut(dir) {
-      let x = 0, y = 0, rot = 0;
-      if (dir === 'right') { x = 800; rot = 12; }
-      if (dir === 'left')  { x = -800; rot = -12; }
-      if (dir === 'down')  { y = 800; rot = 8; }
-      if (dir === 'up')    { y = -800; rot = -8; }
-      cardEl.style.transition = 'transform .22s ease-out';
-      cardEl.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
-      setTimeout(() => { cardEl.style.transition = ''; cardEl.style.transform = 'translate(0px,0px)'; }, 240);
-    }
-
-    // Mouse
-    cardEl.addEventListener('mousedown', onPointerDown);
-    window.addEventListener('mousemove', onPointerMove);
-    window.addEventListener('mouseup', onPointerUp);
-    // Touch
-    cardEl.addEventListener('touchstart', onPointerDown, { passive:true });
-    window.addEventListener('touchmove', onPointerMove, { passive:true });
-    window.addEventListener('touchend', onPointerUp);
-
-    // Buttons (mirror orientation)
-    factBtn?.addEventListener('click', () => { if (!wrongModal.classList.contains('visible')) { animateOut(vertical ? 'down':'right'); handleChoice('fact'); } });
-    opinionBtn?.addEventListener('click', () => { if (!wrongModal.classList.contains('visible')) { animateOut(vertical ? 'up':'left'); handleChoice('opinion'); } });
-    undoBtn?.addEventListener('click', () => {
-      if (wrongModal.classList.contains('visible')) return;
-      const last = history.pop();
-      if (!last) return;
-      index = last.index;
-      if (last.correct) { score = Math.max(0, score - 1); }
-      else { wrong = Math.max(0, wrong - 1); wrongItems = wrongItems.filter((w) => w.text !== deck[index].text); }
-      streak = 0;
-      cardEl.style.display = '';
-      endEl.classList.remove('visible');
-      updateHud();
-      loadCard();
+    // Buttons
+    $('#fact-btn')?.addEventListener('click',()=>{ if(!wrongModal.classList.contains('visible')){ animateOut(mqStack.matches?'down':'right'); handleChoice('fact'); } });
+    $('#opinion-btn')?.addEventListener('click',()=>{ if(!wrongModal.classList.contains('visible')){ animateOut(mqStack.matches?'up':'left'); handleChoice('opinion'); } });
+    undoBtn?.addEventListener('click',()=>{
+      if(wrongModal.classList.contains('visible')) return;
+      const last=history.pop(); if(!last) return; index=last.index;
+      if(last.correct) score=Math.max(0,score-1); else{ wrong=Math.max(0,wrong-1); wrongItems=wrongItems.filter(w=>w.text!==deck[index].text); }
+      streak=0; cardEl.style.display=''; endEl.classList.remove('visible'); updateHud(); loadCard();
     });
-    resetBtn?.addEventListener('click', () => resetGame(true));
-    playAgainBtn?.addEventListener('click', () => resetGame(true));
+    resetBtn?.addEventListener('click',()=>resetGame(true));
+    playAgainBtn?.addEventListener('click',()=>resetGame(true));
 
-    // Init
-    function init() { updateMode(); deck = makeDeck(); loadCard(); }
+    function init(){ updateMode(); deck=makeDeck(); loadCard(); }
     init();
 
     // Basic smoke tests
-    (function runBasicTests() {
-      const results = [];
-      function assert(name, cond) { results.push({ name, pass: !!cond }); }
-
-      const tDeck = makeDeck();
-      assert('Deck size is 10', tDeck.length === 10);
-      assert('Deck has 5 facts', tDeck.filter(i => i.kind==='fact').length === 5);
-      assert('Deck has 5 opinions', tDeck.filter(i => i.kind==='opinion').length === 5);
-
-      const allTexts = [...OPINIONS, ...FACTS].map(i=>i.text);
-      assert('Explanations provided for all items', allTexts.every(t => EXPLANATIONS.has(t)));
-
-      try { updateHud(); assert('updateHud executes', true); } catch(e) { assert('updateHud executes', false); }
-
-      const failed = results.filter(r => !r.pass);
-      if (failed.length) console.warn('[Three Insurance Game] Basic tests failed:', failed);
-      else console.debug('[Three Insurance Game] All basic tests passed.');
+    (function(){
+      const res=[]; const assert=(n,c)=>res.push({n,pass:!!c});
+      const d=makeDeck();
+      assert('deck size 10',d.length===10);
+      assert('5 facts',d.filter(i=>i.kind==='fact').length===5);
+      assert('5 opinions',d.filter(i=>i.kind==='opinion').length===5);
+      const all=[...OPINIONS,...FACTS].map(i=>i.text);
+      assert('explanations exist',all.every(t=>EXPLANATIONS.has(t)));
+      try{ scoreEl.textContent; assert('hud ok',true);}catch{assert('hud ok',false)}
+      const failed=res.filter(r=>!r.pass); if(failed.length) console.warn('[tests]',failed); else console.debug('[tests] ok');
     })();
   </script>
 </body>
