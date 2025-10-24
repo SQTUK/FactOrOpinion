@@ -63,8 +63,7 @@
       border: 2px dashed var(--border); border-radius: 18px; padding: 18px; min-height: 180px;
       display: grid; place-items: center; text-align: center; position: relative;
       background: linear-gradient(180deg, rgba(255,191,197,.10), rgba(255,191,197,0));
-      width: min(680px, 92%);
-      margin-inline: auto;
+      width: min(680px, 92vw); margin: 0 auto;
     }
     .pile h2 { margin: 0; font-size: clamp(16px, 2vw, 22px); letter-spacing:.6px; }
     .pile small { color: var(--muted); }
@@ -227,136 +226,145 @@
   </div>
 
   <script>
-    // --- Three Insurance dataset (50 items) ---
-    // Each item: { text, kind: 'opinion'|'fact', difficulty: 'easy'|'medium'|'hard' }
+    // --- Three Insurance dataset (updated; difficulties removed) ---
 
     const OPINIONS = [
-      // Easy
-      { text: "This is the best insurance Three offers.", kind: 'opinion', difficulty: 'easy' },
-      { text: "You’ll definitely need this cover — phones always get damaged.", kind: 'opinion', difficulty: 'easy' },
-      { text: "Everyone takes insurance on new iPhones.", kind: 'opinion', difficulty: 'easy' },
-      { text: "You’d be crazy not to add this.", kind: 'opinion', difficulty: 'easy' },
-      { text: "It’s a no-brainer — you’ll regret not getting it.", kind: 'opinion', difficulty: 'easy' },
-      // Medium
-      { text: "I’d always recommend going for full cover.", kind: 'opinion', difficulty: 'medium' },
-      { text: "This is our most popular option for good reason.", kind: 'opinion', difficulty: 'medium' },
-      { text: "It’s the best value for money.", kind: 'opinion', difficulty: 'medium' },
-      { text: "I always take insurance myself.", kind: 'opinion', difficulty: 'medium' },
-      { text: "This plan is unbeatable for what you get.", kind: 'opinion', difficulty: 'medium' },
-      { text: "You’ll thank me when something happens.", kind: 'opinion', difficulty: 'medium' },
-      { text: "You can’t go wrong with this one.", kind: 'opinion', difficulty: 'medium' },
-      { text: "I personally think this is worth every penny.", kind: 'opinion', difficulty: 'medium' },
-      { text: "I always tell my customers to take this.", kind: 'opinion', difficulty: 'medium' },
-      { text: "It’s easily the most comprehensive cover available.", kind: 'opinion', difficulty: 'medium' },
-      // Hard
-      { text: "In my opinion, this is the most reliable insurer.", kind: 'opinion', difficulty: 'hard' },
-      { text: "You’ll probably want this — it’s the safest bet.", kind: 'opinion', difficulty: 'hard' },
-      { text: "This might be the best option for you.", kind: 'opinion', difficulty: 'hard' },
-      { text: "I’d choose this myself if I were you.", kind: 'opinion', difficulty: 'hard' },
-      { text: "It’s our premium plan — most customers prefer it.", kind: 'opinion', difficulty: 'hard' },
-      { text: "You won’t find better protection elsewhere.", kind: 'opinion', difficulty: 'hard' },
-      { text: "Trust me, it’s worth it.", kind: 'opinion', difficulty: 'hard' },
-      { text: "It’s basically guaranteed peace of mind.", kind: 'opinion', difficulty: 'hard' },
-      { text: "It’s not expensive when you think about what it covers.", kind: 'opinion', difficulty: 'hard' },
-      { text: "You’ll definitely make use of it at some point.", kind: 'opinion', difficulty: 'hard' }
+      { text: "I have the perfect solution for you.", kind: 'opinion' },
+      { text: "This is the best insurance we offer.", kind: 'opinion' },
+      { text: "Trust me, you’ll definitely need this.", kind: 'opinion' },
+      { text: "I always recommend this one.", kind: 'opinion' },
+      { text: "In my opinion, this is the most reliable.", kind: 'opinion' },
+      { text: "You really shouldn’t leave without this today.", kind: 'opinion' },
+      { text: "This will cover anything that happens.", kind: 'opinion' },
+      { text: "This is the best plan for you.", kind: 'opinion' },
+      { text: "This is the safest choice for all customers.", kind: 'opinion' },
+      { text: "You'll save money with this plan.", kind: 'opinion' },
+      { text: "This is the sensible option.", kind: 'opinion' },
+      { text: "This cover gives you complete peace of mind.", kind: 'opinion' },
+      { text: "You’ll be fully protected with this plan.", kind: 'opinion' },
+      { text: "Most people go for this one because it’s the best value.", kind: 'opinion' },
+      { text: "You won’t have to worry about repairs ever again.", kind: 'opinion' },
+      { text: "It’s definitely worth it for what you get.", kind: 'opinion' },
+      { text: "It works out cheaper in the long run", kind: 'opinion' },
+      { text: "You’ll save yourself a lot of stress if you take this out now.", kind: 'opinion' },
+      { text: "You’ll want this once you see what it covers", kind: 'opinion' },
+      { text: "You’ll never have to worry about your screen again with this.", kind: 'opinion' },
+      { text: "Don’t worry, you can just cancel later if you change your mind. You might as well take it now.", kind: 'opinion' },
+      { text: "You’ll get your replacement in two days", kind: 'opinion' },
+      { text: "You’ll regret it if you don’t take it and something happens.", kind: 'opinion' },
+      { text: "It protects you from everything that usually goes wrong.", kind: 'opinion' },
+      { text: "You’re protected straight away, so you never need to worry again.", kind: 'opinion' },
+      { text: "Full cover covers everything that could possibly happen to your phone.", kind: 'opinion' },
+      { text: "With full cover you'll get a new phone if yours gets lost or stolen.", kind: 'opinion' },
+      { text: "It’s a no-brainer, why wouldn’t you take it when it’s cheaper than one repair?", kind: 'opinion' },
+      { text: "When I had to claim I got a replacement the next day, that's what you can expect.", kind: 'opinion' },
+      { text: "I broke my screen and they were amazing, I got it repaired the same day and only paid the excess.", kind: 'opinion' },
+      { text: "It’s been worth it every time I’ve needed it", kind: 'opinion' },
+      { text: "I’ve had this plan on all my phones and it’s always been the best option.", kind: 'opinion' },
+      { text: "I’ve had both this and another provider, this one’s miles better.", kind: 'opinion' },
+      { text: "In my experience, other insurers don’t cover enough.", kind: 'opinion' },
+      { text: "Most people who’ve claimed say it’s the best insurance they’ve had.", kind: 'opinion' },
+      { text: "You’ll thank yourself if anything happens, I’ve been there before.", kind: 'opinion' }
     ];
 
     const FACTS = [
-      // Easy
-      { text: "Three Insurance covers accidental and liquid damage.", kind: 'fact', difficulty: 'easy' },
-      { text: "You can make unlimited screen repair claims.", kind: 'fact', difficulty: 'easy' },
-      { text: "A replacement is usually sent the day after your claim has been approved", kind: 'fact', difficulty: 'easy' },
-      { text: "You can cancel anytime with no penalty.", kind: 'fact', difficulty: 'easy' },
-      { text: "The cover starts once your phone is delivered or collected.", kind: 'fact', difficulty: 'easy' },
-      // Medium
-      { text: "You can claim online 24/7 through the Three Insurance portal.", kind: 'fact', difficulty: 'medium' },
-      { text: "Repairs are carried out using genuine manufacturer parts.", kind: 'fact', difficulty: 'medium' },
-      { text: "Worldwide cover is included as standard.", kind: 'fact', difficulty: 'medium' },
-      { text: "You can choose between monthly and annual payments.", kind: 'fact', difficulty: 'medium' },
-      { text: "The policy is provided by SquareTrade", kind: 'fact', difficulty: 'medium' },
-      { text: "Your phone is covered for both loss and theft.", kind: 'fact', difficulty: 'medium' },
-      { text: "There’s no limit on the number of screen repairs.", kind: 'fact', difficulty: 'medium' },
-      { text: "The excess depends on your phone model.", kind: 'fact', difficulty: 'medium' },
-      { text: "You’ll get your policy documents by email after purchase.", kind: 'fact', difficulty: 'medium' },
-      { text: "You can switch cover to your new phone when you upgrade.", kind: 'fact', difficulty: 'medium' },
-      // Hard
-      { text: "The policy doesn’t cover deliberate or cosmetic damage.", kind: 'fact', difficulty: 'hard' },
-      { text: "You can view your insurance details anytime in the Three app.", kind: 'fact', difficulty: 'hard' },
-      { text: "Some customers add insurance for peace of mind, others prefer not to.", kind: 'fact', difficulty: 'hard' },
-      { text: "You’re free to choose whether you take insurance today or later.", kind: 'fact', difficulty: 'hard' },
-      { text: "This insurance runs separately from your airtime plan.", kind: 'fact', difficulty: 'hard' },
-      { text: "Claims are typically processed within 48 hours.", kind: 'fact', difficulty: 'hard' },
-      { text: "You’ll need proof of purchase if you make a claim.", kind: 'fact', difficulty: 'hard' },
-      { text: "The cover continues even if you change SIMs.", kind: 'fact', difficulty: 'hard' },
-      { text: "You can call the dedicated claims team for support.", kind: 'fact', difficulty: 'hard' },
-      { text: "I can explain what’s covered, and you can decide if it’s right for you.", kind: 'fact', difficulty: 'hard' }
+      { text: "I have an idea that might work for you.", kind: 'fact' },
+      { text: "This is one option that could meet your needs.", kind: 'fact' },
+      { text: "I can explain what this insurance covers, and you can decide if it’s right for you.", kind: 'fact' },
+      { text: "Some customers choose this for extra peace of mind.", kind: 'fact' },
+      { text: "There are a few options, let me walk you through them.", kind: 'fact' },
+      { text: "Screen damage is covered, cosmetic scratches are not", kind: 'fact' },
+      { text: "You can cancel within the cooling-off period for a full refund if no claim is made.", kind: 'fact' },
+      { text: "The monthly premium is £X. Over 12 months that totals £X.", kind: 'fact' },
+      { text: "Loss and theft are included on our full cover plan. If loss cover is important, our full cover includes it.", kind: 'fact' },
+      { text: "The insurer aims to approve valid claims within 48 hours, though that’s not guaranteed.", kind: 'fact' },
+      { text: "A lot of customers only realise how valuable cover like this is once something happens.", kind: 'fact' },
+      { text: "It’s designed to meet common risks like cracked screens and loss, which are the main causes of phone claims.", kind: 'fact' },
+      { text: "Once your claim is accepted, we aim to send a replacement the next day not weeks later.", kind: 'fact' },
+      { text: "The cover starts immediately, you can make a claim when you need to.", kind: 'fact' },
+      { text: "This plan includes both accidental damage and theft, two of the most common claim types in the UK.", kind: 'fact' },
+      { text: "If your phone’s lost or stolen, you’ll get a replacement like-for-like, not a downgrade.", kind: 'fact' },
+      { text: "Claims are approved every day, as long as they meet the policy terms.", kind: 'fact' },
+      { text: "Over a year damage cover on an iPhone 17 Pro Max costs less than repairing a cracked screen once with Apple.", kind: 'fact' },
+      { text: "When I broke my phone screen I had to pay £289 to Apple to get it repaired.", kind: 'fact' },
+      { text: "I’ve had this cover on my own phone for years, I like knowing I can claim if something happens.", kind: 'fact' },
+      { text: "I actually claimed last year and got my replacement the next day, it was really smooth.", kind: 'fact' },
+      { text: "I’ve seen how expensive repairs can be, this cover really helps avoid that.", kind: 'fact' },
+      { text: "I’ve had insurance on every phone I’ve owned.", kind: 'fact' }
     ];
 
     // Explanations for wrong answers — keyed by exact text
-const EXPLANATIONS = new Map([
-  // Opinions — why it’s opinion, what to do instead
-  ["This is the best insurance Three offers.", "Avoid superlatives like ‘best’ unless you have objective data and defined criteria. Explain features and let the customer decide."],
-  ["You’ll definitely need this cover — phones always get damaged.", "You can’t predict the future or use absolutes like ‘always’. Talk about risks and the cover available instead."],
-  ["Everyone takes insurance on new iPhones.", "‘Everyone’ is an unfounded generalisation. Describe who typically benefits and why, not universal claims."],
-  ["You’d be crazy not to add this.", "Judgmental/pressuring language isn’t customer-centric. Keep it neutral and informative."],
-  ["It’s a no-brainer — you’ll regret not getting it.", "Assumes emotions and outcomes. Present the cover and let the customer choose."],
-  ["I’d always recommend going for full cover.", "Blanket recommendations ignore individual needs. Match options to the customer’s situation instead."],
-  ["This is our most popular option for good reason.", "Popularity alone doesn’t prove it’s right for this customer. If mentioned, add factual context about who it suits and why."],
-  ["It’s the best value for money.", "‘Best value’ is subjective without clear measures. Compare features, excess and price factually."],
-  ["I always take insurance myself.", "Your preference isn’t evidence. Keep the focus on the customer’s needs and budget."],
-  ["This plan is unbeatable for what you get.", "‘Unbeatable’ is not verifiable. Avoid sweeping comparisons."],
-  ["You’ll thank me when something happens.", "Predicts feelings and events. Provide information; don’t forecast outcomes."],
-  ["You can’t go wrong with this one.", "Over-confidence hides trade-offs. Explain pros and cons so the customer can decide."],
-  ["I personally think this is worth every penny.", "‘Worth’ is a value judgement. Link price to benefits and invite the customer’s view."],
-  ["I always tell my customers to take this.", "Suggests one-size-fits-all advice. Tailor to the customer’s needs."],
-  ["It’s easily the most comprehensive cover available.", "‘Most comprehensive’ needs scope and evidence. State what the policy covers instead."],
-  ["In my opinion, this is the most reliable insurer.", "It’s explicitly an opinion and uses ‘most’ without evidence. Refer to the provider factually if needed."],
-  ["You’ll probably want this — it’s the safest bet.", "Still a prediction and a value judgement. Check needs and present options neutrally."],
-  ["This might be the best option for you.", "‘Best’ is subjective. Explain who it suits and why, then confirm preference."],
-  ["I’d choose this myself if I were you.", "Centres the advisor’s view. Keep recommendations needs-based and evidence-led."],
-  ["It’s our premium plan — most customers prefer it.", "‘Most customers prefer’ may be unverifiable. If you mention trends, add context and still personalise."],
-  ["You won’t find better protection elsewhere.", "Unverifiable market-wide claim. Avoid absolutes across the market."],
-  ["Trust me, it’s worth it.", "Appeal to authority + value judgement. Use facts about cover, cost and excess instead."],
-  ["It’s basically guaranteed peace of mind.", "‘Guaranteed’ and ‘peace of mind’ are subjective. Stick to what the policy covers and excludes."],
-  ["It’s not expensive when you think about what it covers.", "Price judgements vary by person. Present price, excess and benefits so the customer can judge."],
-  ["You’ll definitely make use of it at some point.", "Promises future use with certainty. Describe typical claim scenarios without guarantees."],
+    const EXPLANATIONS = new Map([
+      // Opinions explanations
+      ["I have the perfect solution for you.", "Assumes the customer’s needs are already known. Avoid claiming a ‘perfect’ solution before exploring the customer’s situation."],
+      ["This is the best insurance we offer.", "‘Best’ is subjective and not verifiable. It implies superiority without context or comparison."],
+      ["Trust me, you’ll definitely need this.", "Trust comes from transparency, not persuasion. ‘Definitely need’ removes customer choice and adds pressure."],
+      ["I always recommend this one.", "Personal recommendation language implies bias and preference instead of letting the customer decide."],
+      ["In my opinion, this is the most reliable.", "Reliability should be explained through features/terms, not personal judgement."],
+      ["You really shouldn’t leave without this today.", "Creates urgency/FOMO. Time pressure prevents informed decision‑making."],
+      ["This will cover anything that happens.", "No insurance covers everything. This overstates what the product does."],
+      ["This is the best plan for you.", "Assumes suitability without fact‑finding. Avoid declaring ‘best’ before understanding needs."],
+      ["This is the safest choice for all customers.", "Statements about what ‘all customers’ should do are non‑compliant; advice must be personalised."],
+      ["You'll save money with this plan.", "Savings depend on whether the customer claims. It’s speculative to promise savings."],
+      ["This is the sensible option.", "Implies not buying is foolish; this is emotional pressure, not balanced information."],
+      ["This cover gives you complete peace of mind.", "‘Peace of mind’ is emotional. Advisors shouldn’t promise feelings or outcomes."],
+      ["You’ll be fully protected with this plan.", "‘Fully protected’ is misleading. There are always exclusions, limits and excesses."],
+      ["Most people go for this one because it’s the best value.", "‘Most people’ is social proof that can manipulate choice. Popularity ≠ suitability."],
+      ["You won’t have to worry about repairs ever again.", "‘Ever again’ exaggerates impact and is not factual."],
+      ["It’s definitely worth it for what you get.", "‘Worth it’ is a personal judgement; value varies by customer."],
+      ["It works out cheaper in the long run", "Only true for some. Predicting savings is speculative."],
+      ["You’ll save yourself a lot of stress if you take this out now.", "Uses fear/urgency to influence purchase; that’s pressure selling."],
+      ["You’ll want this once you see what it covers", "Assumes the customer’s reaction; removes their autonomy."],
+      ["You’ll never have to worry about your screen again with this.", "Promises worry‑free ownership. Cover has limits and excesses."],
+      ["Don’t worry, you can just cancel later if you change your mind. You might as well take it now.", "Misuses the cooling‑off period to push a sale. Customers must choose freely, not ‘try then cancel’."],
+      ["You’ll get your replacement in two days", "Timeframes are aims, not guarantees. Present them cautiously."],
+      ["You’ll regret it if you don’t take it and something happens.", "Relies on guilt/fear; that’s undue pressure."],
+      ["It protects you from everything that usually goes wrong.", "Overstates scope with ‘everything’. Be precise about covered risks."],
+      ["You’re protected straight away, so you never need to worry again.", "Immediate cover may be factual, but ‘never worry again’ is emotional/absolute."],
+      ["Full cover covers everything that could possibly happen to your phone.", "No policy covers every possible event; avoid absolute claims."],
+      ["With full cover you'll get a new phone if yours gets lost or stolen.", "Replacements are usually refurbished/like‑for‑like. Saying ‘new’ is misleading."],
+      ["It’s a no-brainer, why wouldn’t you take it when it’s cheaper than one repair?", "Challenges the customer’s reasoning; pressuring language isn’t appropriate."],
+      ["When I had to claim I got a replacement the next day, that's what you can expect.", "Personal experience shouldn’t be promised as typical; timelines vary."],
+      ["I broke my screen and they were amazing, I got it repaired the same day and only paid the excess.", "Anecdotes may not represent usual outcomes; avoid implying guarantees."],
+      ["It’s been worth it every time I’ve needed it", "Subjective value statement; keep the discussion factual and personalised."],
+      ["I’ve had this plan on all my phones and it’s always been the best option.", "Personal endorsement suggests universal suitability; avoid ‘always/best’."],
+      ["I’ve had both this and another provider, this one’s miles better.", "Comparative claims need evidence; avoid broad competitor statements."],
+      ["In my experience, other insurers don’t cover enough.", "Anecdotal and potentially inaccurate; focus on what this policy covers."],
+      ["Most people who’ve claimed say it’s the best insurance they’ve had.", "Unverifiable popularity claim; stick to features and limits."],
+      ["You’ll thank yourself if anything happens, I’ve been there before.", "Emotion‑led persuasion about regret; provide facts and choices instead."],
 
-  // Facts — why it’s factual/neutral
-  ["Three Insurance covers accidental and liquid damage.", "States specific covered events from the policy. Checkable and neutral."],
-  ["You can make unlimited screen repair claims.", "Describes claim limits as written. No persuasion, just terms."],
-  ["A replacement is usually sent the day after your claim has been approved", "Sets expectations relative to claim approval, not delivery guarantees. Cautious, accurate phrasing."],
-  ["You can cancel anytime with no penalty.", "Explains cancellation flexibility from the terms; the choice is the customer’s."],
-  ["The cover starts once your phone is delivered or collected.", "Defines when cover begins. Concrete process detail."],
-  ["You can claim online 24/7 through the Three Insurance portal.", "Explains how/when to claim. Operational fact."],
-  ["Repairs are carried out using genuine manufacturer parts.", "Service detail that can be verified with repair standards."],
-  ["Worldwide cover is included as standard.", "Scope statement about where cover applies. Verifiable."],
-  ["You can choose between monthly and annual payments.", "Lists payment options to support informed choice."],
-  ["The policy is provided by SquareTrade", "Names the provider. Neutral attribution; no quality claim."],
-  ["Your phone is covered for both loss and theft.", "States what’s covered. Encourage checking exclusions/excess too."],
-  ["There’s no limit on the number of screen repairs.", "Quantifies limits (or lack of). Present any excess to balance the view."],
-  ["The excess depends on your phone model.", "Explains how the excess is set so customers can compare."],
-  ["You’ll get your policy documents by email after purchase.", "Factual fulfilment step that sets expectations."],
-  ["You can switch cover to your new phone when you upgrade.", "Explains portability of cover and next steps."],
-  ["The policy doesn’t cover deliberate or cosmetic damage.", "States exclusions clearly to avoid over-promising."],
-  ["You can view your insurance details anytime in the Three app.", "Access information; helps self-service without persuasion."],
-  ["Some customers add insurance for peace of mind, others prefer not to.", "Balanced behavioural insight without pressure."],
-  ["You’re free to choose whether you take insurance today or later.", "Confirms optionality and puts control with the customer."],
-  ["This insurance runs separately from your airtime plan.", "Clarifies it’s a separate product; useful for billing questions."],
-  ["Claims are typically processed within 48 hours.", "Shares typical timelines with ‘typically’. Avoid firm promises."],
-  ["You’ll need proof of purchase if you make a claim.", "Explains a clear requirement so customers are prepared."],
-  ["The cover continues even if you change SIMs.", "Clarifies cover is linked appropriately (e.g., to device)."],
-  ["You can call the dedicated claims team for support.", "Signposts a support channel; purely informative."],
-  ["I can explain what’s covered, and you can decide if it’s right for you.", "Customer-led framing that supports informed choice without pressure."]
-]);
-
+      // Facts explanations
+      ["I have an idea that might work for you.", "Encourages conversation and explores needs rather than assuming them."],
+      ["This is one option that could meet your needs.", "Acknowledges choice and keeps discussion open and balanced."],
+      ["I can explain what this insurance covers, and you can decide if it’s right for you.", "Empowers the customer to make an informed decision; aligns with fair treatment."],
+      ["Some customers choose this for extra peace of mind.", "Shares insight without pressure or judgement; neutral tone."],
+      ["There are a few options, let me walk you through them.", "Promotes transparency and informed choice; the advisor is helping, not steering."],
+      ["Screen damage is covered, cosmetic scratches are not", "Clear statement of inclusions/exclusions; transparent and accurate."],
+      ["You can cancel within the cooling-off period for a full refund if no claim is made.", "Provides factual information about customer rights."],
+      ["The monthly premium is £X. Over 12 months that totals £X.", "Explains cost clearly with no persuasive framing."],
+      ["Loss and theft are included on our full cover plan. If loss cover is important, our full cover includes it.", "Links features to needs without assumption; balanced and factual."],
+      ["The insurer aims to approve valid claims within 48 hours, though that’s not guaranteed.", "Sets realistic expectations while acknowledging timescales can vary."],
+      ["A lot of customers only realise how valuable cover like this is once something happens.", "Observational, not pressurising; shares insight without suggesting required action."],
+      ["It’s designed to meet common risks like cracked screens and loss, which are the main causes of phone claims.", "Accurate explanation of policy purpose and relevance."],
+      ["Once your claim is accepted, we aim to send a replacement the next day not weeks later.", "Communicates service standards as aims, not guarantees."],
+      ["The cover starts immediately, you can make a claim when you need to.", "Simple, factual activation timing."],
+      ["This plan includes both accidental damage and theft, two of the most common claim types in the UK.", "Provides context without exaggerating benefits."],
+      ["If your phone’s lost or stolen, you’ll get a replacement like-for-like, not a downgrade.", "Clarifies replacements match spec; manages expectations."],
+      ["Claims are approved every day, as long as they meet the policy terms.", "Factually communicates approvals are routine but conditional on terms."],
+      ["Over a year damage cover on an iPhone 17 Pro Max costs less than repairing a cracked screen once with Apple.", "Permissible factual comparison if evidenced at the time."],
+      ["When I broke my phone screen I had to pay £289 to Apple to get it repaired.", "Personal experience framed as fact, not a promise of outcomes."],
+      ["I’ve had this cover on my own phone for years, I like knowing I can claim if something happens.", "Acceptable personal context; avoid directing the customer."],
+      ["I actually claimed last year and got my replacement the next day, it was really smooth.", "Share as one example only; clarify timelines vary."],
+      ["I’ve seen how expensive repairs can be, this cover really helps avoid that.", "Factual observation about cost risk without pressure."],
+      ["I’ve had insurance on every phone I’ve owned.", "Harmless personal fact if shared neutrally; do not imply the customer should do the same."]
+    ]);
 
     // --- Helpers ---
     const $ = (sel) => document.querySelector(sel);
     const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
     const shuffle = (arr) => arr.map(v => [Math.random(), v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]);
     const sampleN = (arr, n) => shuffle(arr).slice(0, n);
-    const getSwipeThreshold = () =>
-      Math.max(60, Math.min(160, Math.floor(window.innerWidth * 0.22)));
+    const getSwipeThreshold = () => Math.max(60, Math.min(160, Math.floor(window.innerWidth * 0.22)));
 
     // --- Elements ---
     const cardEl = $('#card');
@@ -430,7 +438,8 @@ const EXPLANATIONS = new Map([
       promptEl.textContent = item.text;
       cardEl.style.transform = 'translate(0px, 0px) rotate(0deg)';
       setStamp('good', false); setStamp('bad', false);
-      cardEl.setAttribute('aria-label', `Card ${index+1} of ${deck.length} (${item.kind}, ${item.difficulty}): ${item.text}`);
+      // Do not reveal correctness in accessibility text
+      cardEl.setAttribute('aria-label', `Card ${index+1} of ${deck.length}: ${item.text}`);
       updateHud();
     }
 
@@ -603,7 +612,6 @@ const EXPLANATIONS = new Map([
       assert('Deck size is 10', tDeck.length === 10);
       assert('Deck has 5 facts', tDeck.filter(i => i.kind==='fact').length === 5);
       assert('Deck has 5 opinions', tDeck.filter(i => i.kind==='opinion').length === 5);
-      assert('All items have difficulty labels', tDeck.every(i => ['easy','medium','hard'].includes(i.difficulty)));
 
       const allTexts = [...OPINIONS, ...FACTS].map(i=>i.text);
       assert('Explanations provided for all items', allTexts.every(t => EXPLANATIONS.has(t)));
